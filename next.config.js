@@ -56,7 +56,7 @@ module.exports = {
   },
   env: {
     JWT_CODE: process.env.JWT_CODE,
-    NEXT_PUBLIC_APP_URI: process.env.NEXT_PUBLIC_APP_URI,
+    NEXT_PUBLIC_APP_URI: process.env.NEXT_PUBLIC_VERCEL_URL,
     BOT_URL: process.env.BOT_URL,
     CLIENT_ID: process.env.CLIENT_ID,
     CLIENT_SECRET: process.env.CLIENT_SECRET,
