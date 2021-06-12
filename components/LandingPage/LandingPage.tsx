@@ -37,7 +37,7 @@ export const LandingPage: React.FC = (): React.ReactElement => (
           bgGradient="linear(to-r, green.400,purple.500)"
           fontWeight="extrabold"
         >
-          ScuffedMDB
+          Weirdchamp
         </Text>
         {` `}
       </chakra.h1>
@@ -47,7 +47,7 @@ export const LandingPage: React.FC = (): React.ReactElement => (
         fontSize={{ base: `lg`, md: `xl` }}
         color={useColorModeValue(`gray.600`, `gray.300`)}
       >
-        The website where cool kids write movie reviews :).
+        The website where cool kids play discord sounds :).
       </chakra.p>
       <Button
         as="a"

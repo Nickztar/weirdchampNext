@@ -19,26 +19,20 @@ function MyApp({ Component, pageProps }: AppProps): React.ReactChild {
   return (
     <>
       <DefaultSeo
-        titleTemplate={'%s | SMDB'}
-        description={'A private movie rating website'}
+        titleTemplate={'%s | Weird'}
+        description={'A private discord bot website'}
         openGraph={{
-          title: `ScuffedMDB`,
+          title: `Weirdchamp`,
           type: `website`,
-          site_name: `ScuffedMDB`,
-          images: [
-            {
-              url: `https://www.movie.michael-hall.me/sitePicture.png`,
-              alt: `Profile Picture`,
-            },
-          ],
+          site_name: `Weirdchamp`,
         }}
       />
       <PlausibleProvider
-        domain="movie.michael-hall.me"
+        domain="weirdchamp-next.vercel.app"
         selfHosted
         trackOutboundLinks
         enabled={process.env.NODE_ENV === 'production'}
-        customDomain={'https://stats.michael-hall.me'}
+        customDomain={'https://weirdchamp-next.vercel.app'}
       >
         <QueryClientProvider client={queryClient}>
           <ChakraProvider theme={theme}>

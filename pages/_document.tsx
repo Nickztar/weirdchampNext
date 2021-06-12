@@ -19,7 +19,7 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head />
-        <body style={{ width: `100vw`, height: `100vh` }}>
+        <body style={{ width: `100vw`, height: `100vh`, overflow: 'hidden' }}>
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />
           <Main />
           <NextScript />

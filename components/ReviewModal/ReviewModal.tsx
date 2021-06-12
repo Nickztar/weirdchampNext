@@ -34,9 +34,9 @@ import {
 import { useQuery, useQueryClient } from 'react-query';
 
 import { AiFillStar } from 'react-icons/ai';
-import { getMovies } from '../../utils/queries';
+import { getSounds } from '../../utils/queries';
 import { MovieType } from '../../models/movie';
-import { ReviewEndpointBodyType } from '../../types/APITypes';
+import { S3File } from '../../types/APITypes';
 
 export const ReviewModal = ({ isAdmin }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -69,7 +69,7 @@ export const ReviewModal = ({ isAdmin }) => {
   }, [success]);
 
   const initialRef = React.useRef();
-  const { data: movies } = useQuery(`movies`, getMovies);
+  const { data: movies } = useQuery(`movies`, getSounds);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -77,7 +77,7 @@ export const ReviewModal = ({ isAdmin }) => {
       return setMovieError(`Please select a valid movie.`);
     }
 
-    const data: ReviewEndpointBodyType = {
+    const data: any = {
       // eslint-disable-next-line no-underscore-dangle
       movieID: movie._id,
       comment,
@@ -134,7 +134,7 @@ export const ReviewModal = ({ isAdmin }) => {
                 onChange={(e) => {
                   e.preventDefault();
                   const movieFound = movies.filter(
-                    (mv) => mv.name === e.target.value
+                    (mv) => mv.Key === e.target.value
                   )[0];
                   if (!movieFound) {
                     return setMovieError(`Please select a valid movie!`);
@@ -144,8 +144,8 @@ export const ReviewModal = ({ isAdmin }) => {
                 }}
               >
                 {movies &&
-                  movies?.map((_: MovieType) => (
-                    <option key={_.name}>{_.name}</option>
+                  movies?.map((file: S3File) => (
+                    <option key={file.Key}>{file.Key}</option>
                   ))}
               </Select>
               {movieError && (

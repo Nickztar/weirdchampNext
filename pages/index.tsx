@@ -5,7 +5,7 @@ import HomePage from '../components/HomePage';
 import LandingPage from '../components/LandingPage';
 import { UserType } from '../models/user';
 import { parseUser } from '../utils/parseDiscordUser';
-import { getMovies } from '../utils/queries';
+import { getSounds } from '../utils/queries';
 import BannedPage from '../components/BannedPage';
 import { MovieType } from '../models/movie';
 import { useRouter } from 'next/router';
@@ -20,7 +20,7 @@ export default function Home({
   movies,
 }: HomePageProps): React.ReactChild {
   const router = useRouter();
-  const { movieID } = router.query;
+  const { soundID } = router.query;
 
   if (!user) {
     return <LandingPage />;
@@ -29,10 +29,10 @@ export default function Home({
     return <BannedPage user={user} />;
   }
   //idk typescript well enough to know whats goin wrong here but | any ignores it :/
-  const data: MovieType[] | any = useQuery(`movies`, getMovies, {
-    initialData: movies,
+  const data = useQuery(`sounds`, getSounds, {
+    initialData: [],
   });
-  return <HomePage user={user} movies={data} movieID={movieID} />;
+  return <HomePage user={user} sounds={data} soundID={soundID} />;
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -41,6 +41,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   if (!user) {
     return { props: { user: null } };
   }
-  const movies = await getMovies();
+  const movies = await getSounds();
   return { props: { user, movies } };
 };

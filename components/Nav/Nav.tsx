@@ -18,13 +18,12 @@ import {
 } from '@chakra-ui/react';
 import { IoMoon, IoSunny } from 'react-icons/io5';
 import Link from 'next/link';
-import MovieModal from '../MovieModal';
 import ReviewModal from '../ReviewModal';
 import { UserType } from '../../models/user';
 
 const links = [
   { link: `/`, name: `Home` },
-  { link: `/user/me`, name: `My Reviews` },
+  // { link: `/user/me`, name: `My Reviews` },
   { link: `/users`, name: `All Users`, adminOnly: true },
 ];
 
@@ -53,7 +52,7 @@ export const Nav = ({ user, showMovies }: NavProps) => {
             <Link href="/">
               <a>
                 <Heading fontSize="2xl">
-                  {useBreakpointValue({ base: 'SMDB', md: 'ScuffedMDB' })}
+                  {useBreakpointValue({ base: 'Weird', md: 'Weirdchamp' })}
                 </Heading>
               </a>
             </Link>
@@ -72,11 +71,11 @@ export const Nav = ({ user, showMovies }: NavProps) => {
                 )
               }
             />
-            {(user.isReviewer || user.isAdmin) && showMovies && (
+            {/* {(user.isReviewer || user.isAdmin) && showMovies && (
               <ReviewModal isAdmin={user.isAdmin} />
-            )}
+            )} */}
 
-            {user.isAdmin && showMovies && <MovieModal />}
+            {/* {user.isAdmin && showMovies && <MovieModal />} */}
             <Menu>
               <MenuButton
                 mr={5}

@@ -1,20 +1,15 @@
-import { MovieType } from '../models/movie';
 import { UserType } from '../models/user';
+import { S3File } from '../types/APITypes';
 
-export const getMovies = async (): Promise<MovieType[]> => {
+export const getSounds = async (): Promise<S3File[]> => {
   const res: Response = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_URI}/api/movie`
+    `${process.env.NEXT_PUBLIC_APP_URI}/api/sounds`
   );
   // eslint-disable-next-line no-return-await
-  const unsortedMovies = await res.json();
+  const unsortedSounds = await res.json();
 
-  const movies = unsortedMovies.data
-    .sort(
-      (a, b) =>
-        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-    )
-    .reverse();
-  return [];
+  const sounds = unsortedSounds.data;
+  return sounds;
 };
 
 export const getUsers = async (): Promise<UserType[]> => {

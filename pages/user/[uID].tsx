@@ -5,15 +5,15 @@ import { parseUser } from '../../utils/parseDiscordUser';
 import AppLayout from '../../components/AppLayout';
 import AboutUserSection from '../../components/AboutUserSection';
 import User from '../../models/user';
-import { getMovies } from '../../utils/queries';
-import { MovieType } from '../../models/movie';
+import { getSounds } from '../../utils/queries';
 import UserReviewSection from '../../components/UserReviewSection';
 import type { GetServerSidePropsContext } from 'next';
+import { S3File } from '../../types/APITypes';
 
 interface EditUserProps {
   user: UserType;
   desiredUser: UserType;
-  movies: MovieType[];
+  movies: S3File[];
 }
 
 function EditUser({
@@ -72,7 +72,7 @@ export async function getServerSideProps(
   } else if (uID === 'me') {
     desiredUser = user;
   }
-  const movies = await getMovies();
+  const movies = await getSounds();
   return {
     props: {
       user,

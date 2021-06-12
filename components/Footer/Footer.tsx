@@ -45,7 +45,7 @@ export const Footer = () => (
       align="center"
     >
       <a aria-current="page" aria-label="Back to Home page" href="/" rel="home">
-        <h1>ScuffedMDB</h1>
+        <h1>Weirdchamp</h1>
       </a>
 
       <Text marginStart={{ md: `auto` }} justifySelf="middle">

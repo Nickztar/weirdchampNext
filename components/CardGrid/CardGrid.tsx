@@ -23,23 +23,21 @@ import { BiChevronDown } from 'react-icons/bi';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import Card from '../Card';
-import MovieDetailsModal from '../MovieDetailsModal';
-import movie, { MovieType, ReviewType } from '../../models/movie';
 import { UserType } from '../../models/user';
 import { NextSeo } from 'next-seo';
+import { PlayEndpointBodyType, S3File } from '../../types/APITypes';
 
 interface CardGridProps {
-  movies: { data: MovieType[] };
+  sounds: { data: S3File[] };
   user: UserType;
-  movieID?: string | string[];
+  soundID?: string | string[];
 }
 
 export const CardGrid: React.FC<CardGridProps> = ({
-  movies: unSortedMovies,
+  sounds: unSortedSounds,
   user,
-  movieID,
+  soundID,
 }): React.ReactElement => {
-  const [modalMovie, setModalMovie] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [filter, setFilter] = useState('');
   const [sort, setSort] = useState('recent');
@@ -50,8 +48,8 @@ export const CardGrid: React.FC<CardGridProps> = ({
   useEffect(() => {
     toast.update(`otherToast`, {
       variant: `subtle`,
-      title: 'Movie not found',
-      description: 'The shared movie does not exist',
+      title: 'Sound not found',
+      description: 'The shared sound does not exist',
       status: 'error',
       duration: 5000,
       isClosable: true,
@@ -59,92 +57,103 @@ export const CardGrid: React.FC<CardGridProps> = ({
   }, [colorMode]);
 
   useEffect(() => {
-    if (movieID && !isOpen) {
-      const foundMovie = movies.data.find((mv) => mv._id === movieID);
-      if (!foundMovie) {
+    if (soundID && !isOpen) {
+      const foundSound = sounds.data.find((mv) => mv.Key === soundID);
+      if (!foundSound) {
         toast({
           id: 'otherToast',
           variant: `subtle`,
-          title: 'Movie not found',
-          description: 'The shared movie does not exist',
+          title: 'Sound not found',
+          description: 'The shared sound does not exist',
           status: 'error',
           duration: 5000,
           isClosable: true,
         });
         return;
       }
-      setModalMovie(foundMovie);
       onOpen();
       return;
     }
   }, []);
+  const handlePlay = async (sound: S3File) => {
+    if (!sound) {
+      return;
+      // return setMovieError(`Please select a valid movie.`);
+    }
 
-  const movies = {
-    data: unSortedMovies.data
-      ?.filter((mv) => {
-        if (mv.name.toLowerCase().includes(filter)) {
+    const data: PlayEndpointBodyType = {
+      // eslint-disable-next-line no-underscore-dangle
+      soundID: sound.Key,
+      channelID: '621035571057524737',
+    };
+    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URI}/api/sounds`, {
+      method: `post`,
+      body: JSON.stringify(data),
+    });
+
+    const successData = await res.json();
+    console.log(res);
+    if (res.status === 200) {
+      toast({
+        title: 'Sound playing!',
+        status: 'success',
+        position: 'top',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const sounds = {
+    data: unSortedSounds?.data
+      .filter((mv) => {
+        if (mv.Key.toLowerCase().includes(filter.toLowerCase())) {
           return true;
         }
         return false;
       })
       .sort((a, b) => {
-        if (sort === 'recent' || sort === 'old') {
+        if (sort === 'recent') {
           return (
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+            new Date(b.LastModified).getTime() -
+            new Date(a.LastModified).getTime()
+          );
+        } else if (sort === 'old') {
+          return (
+            new Date(a.LastModified).getTime() -
+            new Date(b.LastModified).getTime()
           );
         } else if (sort === 'best') {
-          return a.rating - b.rating;
+          return a.Size - b.Size;
         } else if (sort === 'worst') {
-          return a.rating - b.rating;
+          return b.Size - a.Size;
         }
       }),
   };
 
-  if (sort === 'best' || sort === 'recent') {
-    movies.data = movies.data.reverse();
-  }
+  // if (sort === 'best' || sort === 'recent') {
+  //   // sounds.data = sounds.data.reverse();
+  // }
 
   return (
     <>
       <NextSeo
         openGraph={{
-          title: `ScuffedMDB`,
+          title: `Weirdchamp`,
           type: `website`,
-          site_name: `ScuffedMDB`,
-          images: [
-            {
-              width: 2542,
-              height: 1312,
-              url: modalMovie
-                ? modalMovie.image
-                : `https://www.movie.michael-hall.me/sitePicture.png`,
-              alt: modalMovie
-                ? `${modalMovie.name} poster`
-                : 'ScuffedMDB webpage',
-            },
-          ],
+          site_name: `Weirdchamp`,
         }}
-        description={
-          modalMovie
-            ? 'A user has shared this movie with you.'
-            : 'A private movie rating website'
-        }
-      />
-      <MovieDetailsModal
-        isOpen={isOpen}
-        onClose={onClose}
-        movie={modalMovie}
-        user={user}
+        description={'A private discord bot website'}
       />
       <Container maxW="container.xl" mt={10}>
         <Heading fontSize="6xl" textAlign="center">
-          We have watched{' '}
+          We have{' '}
           {
             <chakra.span color={useColorModeValue('purple.500', 'purple.300')}>
-              {unSortedMovies?.data?.length}
+              {unSortedSounds?.data?.length}
             </chakra.span>
           }{' '}
-          movies
+          sounds
         </Heading>
         <Flex
           width="full"
@@ -191,14 +200,14 @@ export const CardGrid: React.FC<CardGridProps> = ({
                 isDisabled={sort === 'best'}
                 onClick={() => setSort('best')}
               >
-                Best
+                Smallest
               </MenuItem>
               <MenuItem
                 zIndex={999}
                 isDisabled={sort === 'worst'}
                 onClick={() => setSort('worst')}
               >
-                Worst
+                Biggest
               </MenuItem>
             </MenuList>
           </Menu>
@@ -208,16 +217,16 @@ export const CardGrid: React.FC<CardGridProps> = ({
           spacing={10}
           alignItems="stretch"
         >
-          {movies?.data?.map((movie: MovieType<ReviewType[]>, i) => (
+          {sounds.data?.map((sound: S3File, i) => (
             <Box
               key={`${i.toString()}cardBox`}
               height="full"
               onClick={() => {
-                setModalMovie(movie);
+                handlePlay(sound);
                 return onOpen();
               }}
             >
-              <Card movie={movie} key={`${i.toString()}card`} />
+              <Card sound={sound} key={`${i.toString()}card`} />
             </Box>
           ))}
         </SimpleGrid>

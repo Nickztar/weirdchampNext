@@ -5,17 +5,18 @@ import CardGrid from '../CardGrid';
 import { MovieType } from '../../models/movie';
 import { UserType } from '../../models/user';
 import { NextSeo } from 'next-seo';
+import { S3File } from '../../types/APITypes';
 
 interface HomePageProps {
   user: UserType;
-  movies: { data: MovieType[] };
-  movieID: string | string[];
+  sounds: { data: S3File[] };
+  soundID: string | string[];
 }
 
 export const HomePage: React.FC<HomePageProps> = ({
   user,
-  movies,
-  movieID,
+  sounds,
+  soundID,
 }): React.ReactElement => {
   const { colorMode } = useColorMode();
   const toast = useToast();
@@ -25,7 +26,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       variant: `subtle`,
       position: `top`,
       title: `Read only mode`,
-      description: `You do not have permissions to add or remove reviews.`,
+      description: `You do not have permissions to add or remove sounds.`,
       status: `error`,
       isClosable: true,
     });
@@ -37,7 +38,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         variant: `subtle`,
         position: `top`,
         title: `Read only mode`,
-        description: `You do not have permissions to add or remove reviews.`,
+        description: `You do not have permissions to add or remove sounds.`,
         status: `error`,
         isClosable: true,
       });
@@ -49,7 +50,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
       <AppLayout user={user} showMovies>
         <div>
-          <CardGrid movies={movies} user={user} movieID={movieID} />
+          <CardGrid sounds={sounds} user={user} soundID={soundID} />
         </div>
       </AppLayout>
     </>
