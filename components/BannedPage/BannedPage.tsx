@@ -45,9 +45,9 @@ export const BannedPage = ({ user }: { user: UserType }) => {
                 &quot;{user.banReason}&quot;
             </Text>
             <Text mt={3} color={useColorModeValue(`gray.600`, `gray.400`)}>
-                If you want to dispute this contact Mikerophone#0001 on discord
+                If you want to dispute this contact Nickztar#1337 on discord
                 or create an issue on the{` `}
-                <Link href="https://github.com/mah51/movie-web-typescript">
+                <Link href="https://github.com/Nickztar/weirdchampNext">
                     github repo
                 </Link>
                 {` `}

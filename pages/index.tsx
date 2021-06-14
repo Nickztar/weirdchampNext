@@ -7,7 +7,6 @@ import { UserType } from '../models/user';
 import { parseUser } from '../utils/parseDiscordUser';
 import { getSounds } from '../utils/queries';
 import BannedPage from '../components/BannedPage';
-import { MovieType } from '../models/movie';
 import { useRouter } from 'next/router';
 
 interface HomePageProps {
