@@ -267,7 +267,7 @@ export const CardGrid: React.FC<CardGridProps> = ({
                 <IconButton
                   key={`${i.toString()}icon`}
                   variant="ghost"
-                  h="100%"
+                  h="84px"
                   minH="100%"
                   aria-label="Play preview"
                   onClick={() => handlePreview(sound)}
