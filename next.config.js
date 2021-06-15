@@ -3,7 +3,7 @@ const ContentSecurityPolicy = `
   script-src 'self' 'unsafe-eval' 'unsafe-inline' *.michael-hall.me;
   style-src 'self' 'unsafe-inline' *.googleapis.com;
   img-src * blob: data:;
-  media-src 'none';
+  media-src weirdchamp.s3.eu-north-1.amazonaws.com;
   connect-src *;
   font-src 'self' fonts.gstatic.com;
 `;

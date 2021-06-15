@@ -1,16 +1,5 @@
-import Image from 'next/image';
-import {
-  Box,
-  Text,
-  useColorModeValue,
-  Flex,
-  chakra,
-  Badge,
-  HStack,
-} from '@chakra-ui/react';
+import { Box, Text, useColorModeValue, Flex, chakra } from '@chakra-ui/react';
 
-import { MovieType, ReviewType } from '../../models/movie';
-import Rating from '../Rating';
 import { S3File } from '../../types/APITypes';
 
 interface CardProps {

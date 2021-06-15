@@ -11,3 +11,7 @@ export interface DiscordUser {
   mfa_enabled: boolean;
   premium_type: number;
 }
+
+export interface IPreviewSound {
+  url: string;
+}
