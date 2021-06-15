@@ -43,6 +43,7 @@ export const Nav = ({ user, showMovies }: NavProps) => {
         borderColor={useColorModeValue('purple.500', 'purple.300')}
       >
         <Flex
+          mx={4}
           h={20}
           maxWidth="full"
           alignItems="center"
