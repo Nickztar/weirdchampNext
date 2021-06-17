@@ -65,7 +65,7 @@ export const PreviewButton: React.FC<IPreviewButtonProps> = ({
         minH="100%"
         aria-label="Play preview"
         onClick={() => handlePreview(SongKey)}
-        icon={<Hashvatar hash={hash} showGrid variant="spider" />}
+        icon={<Hashvatar hash={hash} showGrid variant="spider" w="100%" h="100%" />}
       />
     </Tooltip>
   );
