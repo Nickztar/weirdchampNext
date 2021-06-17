@@ -1,0 +1,1 @@
+export { SHA256Avatar as default } from "./Hashvatar"; 
