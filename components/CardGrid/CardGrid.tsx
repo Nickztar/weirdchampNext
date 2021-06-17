@@ -30,6 +30,9 @@ import { NextSeo } from 'next-seo';
 import { PlayEndpointBodyType, S3File } from '../../types/APITypes';
 import { IPreviewSound } from '../../types/generalTypes';
 import { StarIcon } from '@chakra-ui/icons';
+import Hashvatar from '../Hashvatar';
+import { sha256 } from '../Hashvatar/Hashvatar';
+import PreviewButton from '../PreviewButton';
 
 interface CardGridProps {
   sounds: { data: S3File[] };
@@ -254,7 +257,7 @@ export const CardGrid: React.FC<CardGridProps> = ({
               <Box
                 height="full"
                 width="full"
-                maxW="90%"
+                maxW="80%"
                 key={`${i.toString()}cardBox`}
                 onClick={() => {
                   handlePlay(sound);
@@ -263,22 +266,7 @@ export const CardGrid: React.FC<CardGridProps> = ({
               >
                 <Card sound={sound} key={`${i.toString()}card`} />
               </Box>
-              <Tooltip
-                label="Play preview"
-                placement="top"
-                hasArrow
-                aria-label="Play preview"
-              >
-                <IconButton
-                  key={`${i.toString()}icon`}
-                  variant="ghost"
-                  h="84px"
-                  minH="100%"
-                  aria-label="Play preview"
-                  onClick={() => handlePreview(sound)}
-                  icon={<StarIcon size={18} />}
-                />
-              </Tooltip>
+              <PreviewButton SongKey={sound.Key} Index={i} />
             </Flex>
           ))}
         </SimpleGrid>

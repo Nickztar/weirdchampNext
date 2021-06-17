@@ -69,7 +69,7 @@ export const Card: React.FC<CardProps> = ({ sound }): React.ReactElement => {
               fontWeight="bold"
               isTruncated
             >
-              {sound.Key.replace(/(.wav)|(.mp3)/gm, '')}
+              {sound.Key.replace(/(.wav)|(.mp3)/gm, '').replace(/_/gm, " ")}
             </Text>
             {/* <Badge colorScheme="purple">{genres[0]}</Badge> */}
           </Flex>
