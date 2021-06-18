@@ -15,3 +15,8 @@ export interface DiscordUser {
 export interface IPreviewSound {
   url: string;
 }
+
+export interface IOnDrag {
+  x: number;
+  y: number;
+}

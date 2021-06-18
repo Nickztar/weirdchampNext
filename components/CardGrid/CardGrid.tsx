@@ -17,8 +17,6 @@ import {
   useColorModeValue,
   useToast,
   useColorMode,
-  IconButton,
-  Tooltip,
 } from '@chakra-ui/react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { BiChevronDown } from 'react-icons/bi';
@@ -28,10 +26,6 @@ import Card from '../Card';
 import { UserType } from '../../models/user';
 import { NextSeo } from 'next-seo';
 import { PlayEndpointBodyType, S3File } from '../../types/APITypes';
-import { IPreviewSound } from '../../types/generalTypes';
-import { StarIcon } from '@chakra-ui/icons';
-import Hashvatar from '../Hashvatar';
-import { sha256 } from '../Hashvatar/Hashvatar';
 import PreviewButton from '../PreviewButton';
 
 interface CardGridProps {
@@ -82,39 +76,7 @@ export const CardGrid: React.FC<CardGridProps> = ({
       return;
     }
   }, []);
-  const handlePreview = async (sound: S3File) => {
-    if (!sound) {
-      return;
-    }
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URI}/api/preview?key=${sound.Key}`
-    );
-    if (res.status === 200) {
-      const json = (await res.json()) as IPreviewSound;
-
-      const audio = new Audio(json.url);
-      audio.onloadedmetadata = async () => {
-        audio.volume = 0.1;
-        toast({
-          title: 'Preview playing...',
-          status: 'success',
-          position: 'top',
-          duration: audio.duration * 1000,
-          isClosable: false,
-        });
-        await audio.play();
-      };
-    } else {
-      toast({
-        title: 'Failed to get preview!',
-        status: 'error',
-        position: 'top',
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
   const handlePlay = async (sound: S3File) => {
     if (!sound) {
       return;
