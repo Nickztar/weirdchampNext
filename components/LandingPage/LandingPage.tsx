@@ -51,7 +51,6 @@ export const LandingPage: React.FC = (): React.ReactElement => (
       </chakra.p>
       <Button
         as="a"
-        variant="solid"
         color={useColorModeValue(`purple.700`, `purple.300`)}
         display="inline-flex"
         alignItems="center"

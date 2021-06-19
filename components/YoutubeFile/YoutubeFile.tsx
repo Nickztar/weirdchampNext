@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react';
 import {
+  Box,
   Button,
+  Flex,
   Icon,
   Input,
   useColorModeValue,
@@ -50,7 +52,7 @@ export const YoutubeFile: React.FC<IYoutubeFile> = (props) => {
   };
 
   return (
-    <>
+    <Flex flexDir="column" alignItems="center" justifyContent="center">
       <Input
         placeholder="Enter a valid youtube url..."
         value={url}
@@ -80,6 +82,6 @@ export const YoutubeFile: React.FC<IYoutubeFile> = (props) => {
           />
         </Icon>
       </Button>
-    </>
+    </Flex>
   );
 };

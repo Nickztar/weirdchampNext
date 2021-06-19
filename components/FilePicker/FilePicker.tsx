@@ -1,3 +1,4 @@
+import { Input } from '@chakra-ui/react';
 import React, { useRef, useState } from 'react';
 
 interface IFilePicker {
@@ -17,10 +18,22 @@ export const FilePicker: React.FC<IFilePicker> = (props) => {
   };
 
   return (
-    <label className="file">
+    <label
+      className="file"
+      style={{
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
       {props.children}
-      <input
+      <Input
         type="file"
+        width="100%"
+        height={8}
+        top="-6px"
+        left="0"
         ref={fileInput}
         key={keyState}
         onChange={(e) => handleChange()}

@@ -23,7 +23,7 @@ import { UserType } from '../../models/user';
 
 const links = [
   { link: `/`, name: `Home` },
-  { link: `/cutter`, name: `Audio cutter` },
+  { link: `/audiocutter`, name: `Audio cutter` },
   { link: `/users`, name: `All Users`, adminOnly: true },
 ];
 
