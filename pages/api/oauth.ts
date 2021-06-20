@@ -93,6 +93,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     count.last_updated = Date.now();
     await count.save();
   }
+  const expireDate = new Date();
+  expireDate.setTime(expireDate.getTime() + 30 * 24 * 3600 * 1000);
 
   const token = sign(
     count ? count.toJSON() : newUser.toJSON(),
@@ -105,6 +107,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       secure: process.env.NODE_ENV !== `development`,
       sameSite: `lax`,
       path: `/`,
+      expires: expireDate,
     })
   );
 
