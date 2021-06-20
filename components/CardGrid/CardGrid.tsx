@@ -128,6 +128,14 @@ export const CardGrid: React.FC<CardGridProps> = ({
           return a.Size - b.Size;
         } else if (sort === 'worst') {
           return b.Size - a.Size;
+        } else if (sort === 'name') {
+          const nameA = a.Key.toLowerCase();
+          const nameB = b.Key.toLowerCase();
+          if (nameA < nameB)
+            //sort string ascending
+            return -1;
+          if (nameA > nameB) return 1;
+          return 0; //default return value (no sorting)
         }
       }),
   };
@@ -175,7 +183,7 @@ export const CardGrid: React.FC<CardGridProps> = ({
 
           <Menu>
             <MenuButton as={Button} rightIcon={<BiChevronDown />}>
-              Sort by...
+              Sort by: {sort[0].toUpperCase() + sort.slice(1)}
             </MenuButton>
             <MenuList zIndex={998}>
               <MenuItem
@@ -205,6 +213,13 @@ export const CardGrid: React.FC<CardGridProps> = ({
                 onClick={() => setSort('worst')}
               >
                 Biggest
+              </MenuItem>
+              <MenuItem
+                zIndex={999}
+                isDisabled={sort === 'name'}
+                onClick={() => setSort('name')}
+              >
+                Name
               </MenuItem>
             </MenuList>
           </Menu>
