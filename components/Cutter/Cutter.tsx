@@ -225,7 +225,7 @@ export const Cutter: React.FC<ICutterProps> = ({ file, handleFileChange }) => {
             >
               <a
                 className="ctrl-item"
-                data-type="wav"
+                data-type="mp3"
                 onClick={handleEncode}
                 title="Download"
               >
