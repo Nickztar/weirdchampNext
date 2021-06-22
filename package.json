@@ -1,5 +1,5 @@
 {
-  "name": "movie-web-typescript",
+  "name": "discord-bot-typescript",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,6 +13,7 @@
     "@chakra-ui/react": "^1.3.4",
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.1.5",
+    "aws-sdk": "^2.931.0",
     "axios": "^0.21.1",
     "cookie": "^0.4.1",
     "date-fns": "^2.21.1",

@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 import { IoMoon, IoSunny } from 'react-icons/io5';
 import Link from 'next/link';
-import ReviewModal from '../ReviewModal';
+import SoundModal from '../SoundModal';
 import { UserType } from '../../models/user';
 
 const links = [
@@ -72,9 +72,9 @@ export const Nav = ({ user, showMovies }: NavProps) => {
                 )
               }
             />
-            {/* {(user.isReviewer || user.isAdmin) && showMovies && (
-              <ReviewModal isAdmin={user.isAdmin} />
-            )} */}
+            {(user.isReviewer || user.isAdmin) && (
+              <SoundModal isAdmin={user.isAdmin} />
+            )}
 
             {/* {user.isAdmin && showMovies && <MovieModal />} */}
             <Menu>

@@ -5,7 +5,8 @@ import { DiscordUser } from '../../types/generalTypes';
 import User from '../../models/user';
 import dbConnect from '../../utils/dbConnect';
 import axios from 'axios';
-
+import aws from 'aws-sdk';
+import { AWS } from '../../types/Constants';
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
   if (req.method === `GET`) {
@@ -27,11 +28,18 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       if (!discUser) {
         return res.status(401);
       }
-
-      const response = await axios.get(
-        `${process.env.BOT_URL}/api/aws/geturlbykey?key=${key}`
-      );
-      return res.status(200).json({ url: response.data as string });
+      aws.config.update({
+        region: AWS.REGION,
+        accessKeyId: process.env.S3_ID,
+        secretAccessKey: process.env.S3_KEY,
+      });
+      const s3 = new aws.S3({ apiVersion: AWS.API_VERSION });
+      const url = s3.getSignedUrl('getObject', {
+        Bucket: AWS.S3_BUCKET,
+        Key: key,
+        Expires: 60,
+      });
+      return res.status(200).json({ url: url });
       // const review = {
       //     // eslint-disable-next-line no-underscore-dangle
       //     user: discUser._id,

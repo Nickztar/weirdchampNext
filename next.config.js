@@ -1,6 +1,6 @@
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' *.michael-hall.me;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' *.weirchamp.wtf;
   style-src 'self' 'unsafe-inline' *.googleapis.com;
   img-src * blob: data:;
   media-src weirdchamp.s3.eu-north-1.amazonaws.com;
