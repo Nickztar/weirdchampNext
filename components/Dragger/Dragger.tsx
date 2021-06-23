@@ -1,3 +1,4 @@
+import { Box } from '@chakra-ui/react';
 import React from 'react';
 import { IOnDrag } from '../../types/generalTypes';
 
@@ -6,6 +7,8 @@ interface IDragger {
   y?: number;
   onDrag: (e: IOnDrag) => void;
   className?: string;
+  IsSideDragger: boolean;
+  IsLeft?: boolean;
 }
 
 export const Dragger: React.FC<IDragger> = (props) => {
@@ -33,8 +36,28 @@ export const Dragger: React.FC<IDragger> = (props) => {
     window.removeEventListener('mousemove', handleMouseMove);
     window.removeEventListener('mouseup', handleMouseUp);
   };
+
+  if (props.IsSideDragger) {
+    return (
+      <Box
+        className={'dragger ' + props.className}
+        onMouseDown={handleMouseDown}
+        w="10px"
+        borderRadius={props.IsLeft ? '4px 0px 0px 4px' : '0px 4px 4px 0px'}
+        background="rgb(0, 224, 255)"
+        transform={`translateX(${props.IsLeft ? '0%' : '-100%'})`}
+        style={{
+          left: props.x + 'px',
+          top: props.y + 'px',
+        }}
+      >
+        {props.children}
+      </Box>
+    );
+  }
+
   return (
-    <div
+    <Box
       className={'dragger ' + props.className}
       onMouseDown={handleMouseDown}
       style={{
@@ -43,6 +66,6 @@ export const Dragger: React.FC<IDragger> = (props) => {
       }}
     >
       {props.children}
-    </div>
+    </Box>
   );
 };

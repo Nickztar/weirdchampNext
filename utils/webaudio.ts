@@ -64,8 +64,8 @@ export default class WebAudio extends EventEmitter {
   }
 
   _afterStop() {
-    this.source.disconnect();
-    this.scriptNode.disconnect();
+    this.source?.disconnect();
+    this.scriptNode?.disconnect();
     this._playing = false;
   }
 
@@ -93,7 +93,7 @@ export default class WebAudio extends EventEmitter {
   };
 
   pause() {
-    this.source.stop();
+    this.source?.stop();
 
     this._afterStop();
   }
@@ -101,7 +101,7 @@ export default class WebAudio extends EventEmitter {
   destroy() {
     this._afterStop();
 
-    this.gainNode.disconnect();
+    this.gainNode?.disconnect();
     this.removeAllListeners();
   }
 

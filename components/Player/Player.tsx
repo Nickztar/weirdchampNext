@@ -4,7 +4,8 @@ import Dragger from '../Dragger';
 import WebAudio from '../../utils/webaudio';
 import { IOnDrag } from '../../types/generalTypes';
 import Timestamp from '../Timestamp';
-import { useColorMode } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
+import { BsThreeDotsVertical } from 'react-icons/bs';
 
 const containerWidth = 1000;
 const containerHeight = 160;
@@ -13,12 +14,8 @@ function getClipRect(start: number, end: number) {
   return `rect(0, ${end}px, ${containerHeight}px, ${start}px)`;
 }
 
-const color1 = '#1900ff';
-const darkColor1 = '#ff0000';
-const color2 = '#6e9fe9';
-const darkColor2 = '#fc2424';
-const gray1 = '#ddd';
-const gray2 = '#e3e3e3';
+const color = '#00ff8e';
+const gray = '#5f8b78eb';
 
 interface IPlayer {
   encoding: boolean;
@@ -37,14 +34,9 @@ interface IPlayer {
 export const Player: React.FC<IPlayer> = (props) => {
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [audio, setAudio] = useState<WebAudio>();
-  const [start, setStart] = useState<number>(0);
-  const [end, setEnd] = useState<number>(0);
   const endTimeRef = useRef<number>(0);
   const startTimeRef = useRef<number>(0);
   const currentTimeRef = useRef<number>(0);
-  const [current, setCurrent] = useState<number>(0);
-
-  const { colorMode } = useColorMode();
 
   const widthDurationRatio: number =
     containerWidth / props.audioBuffer.duration;
@@ -143,12 +135,10 @@ export const Player: React.FC<IPlayer> = (props) => {
 
   useEffect(() => {
     startTimeRef.current = props.startTime;
-    setStart(time2pos(props.startTime));
   }, [props.startTime]);
 
   useEffect(() => {
     endTimeRef.current = props.endTime;
-    setEnd(time2pos(props.endTime));
   }, [props.endTime]);
 
   useEffect(() => {
@@ -156,34 +146,87 @@ export const Player: React.FC<IPlayer> = (props) => {
       audio && audio.play(props.currentTime);
     }
     currentTimeRef.current = props.currentTime;
-    setCurrent(time2pos(props.currentTime));
   }, [props.currentTime]);
 
+  useEffect(() => {
+    return () => {
+      clean();
+    };
+  }, []);
+
   return (
-    <div className="player">
+    <Box
+      className="player"
+      background="linear-gradient(180deg,#003d75,#232b56)"
+      borderRadius="4px"
+    >
       <div className="clipper">
         <Waver
           audioBuffer={props.audioBuffer}
           width={containerWidth}
           height={containerHeight}
-          color1={gray1}
-          color2={gray2}
+          color={gray}
+          IsBackground={true}
         />
       </div>
-      <div className="clipper" style={{ clip: getClipRect(start, end) }}>
+      <div
+        className="clipper"
+        style={{
+          clip: getClipRect(time2pos(props.startTime), time2pos(props.endTime)),
+        }}
+      >
         <Waver
+          IsBackground={false}
           audioBuffer={props.audioBuffer}
           width={containerWidth}
           height={containerHeight}
-          color1={colorMode == 'light' ? color1 : darkColor1}
-          color2={colorMode == 'light' ? color2 : darkColor2}
+          color={color}
         />
       </div>
-      <Dragger x={start} onDrag={dragStart} />
-      <Dragger className="drag-current" x={current} onDrag={dragCurrent}>
+      <Dragger
+        IsSideDragger={true}
+        IsLeft={true}
+        x={time2pos(props.startTime)}
+        onDrag={dragStart}
+      >
+        <BsThreeDotsVertical
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '0',
+            width: '100%',
+            color: 'white',
+            transform: 'translateY(-50%) scale(2)',
+            pointerEvents: 'none',
+          }}
+        />
+      </Dragger>
+      <Dragger
+        IsSideDragger={false}
+        className="drag-current"
+        x={time2pos(props.currentTime)}
+        onDrag={dragCurrent}
+      >
         <Timestamp currentTime={currentTimeRef.current} />
       </Dragger>
-      <Dragger x={end} onDrag={dragEnd} />
-    </div>
+      <Dragger
+        IsSideDragger={true}
+        IsLeft={false}
+        x={time2pos(props.endTime)}
+        onDrag={dragEnd}
+      >
+        <BsThreeDotsVertical
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '0',
+            width: '100%',
+            transform: 'translateY(-50%) scale(2)',
+            color: 'white',
+            pointerEvents: 'none',
+          }}
+        />
+      </Dragger>
+    </Box>
   );
 };

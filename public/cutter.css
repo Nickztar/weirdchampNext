@@ -45,8 +45,8 @@
   top: 0;
   bottom: 0;
   width: 1px;
-  background: #999;
-  cursor: col-resize;
+  background: #FFF;
+  cursor: ew-resize;
 }
 .dragger::after {
   content: '';
@@ -56,12 +56,7 @@
   top: 0;
   bottom: 0;
 }
-.dragger:hover {
-  background: #333;
-}
-.drag-current {
-  background: #0cf;
-}
+
 .landing {
   padding-bottom: 100px;
 }

@@ -8,8 +8,8 @@ interface IWaver {
   audioBuffer: AudioBuffer;
   width: number;
   height: number;
-  color1: string;
-  color2: string;
+  color: string;
+  IsBackground: boolean;
 }
 
 export const Waver: React.FC<IWaver> = (props) => {
@@ -28,25 +28,30 @@ export const Waver: React.FC<IWaver> = (props) => {
 
   const repaint = (newPeaks: Array<number[]>) => {
     const count = newPeaks.length;
-    const height = props.height * 1.5;
+    const eql = props.height * 1.2;
     const centerY = props.height / 2;
 
-    ctx.lineWidth = 1.5;
-    ctx.clearRect(0, 0, props.width, props.height);
+    ctx.strokeStyle = props.color;
 
+    ctx.clearRect(0, 0, props.width, props.height);
+    ctx.beginPath();
+    ctx.lineWidth = 1;
+    ctx.moveTo(0, centerY);
+    ctx.lineTo(1000, centerY);
+    ctx.stroke();
+
+    ctx.lineWidth = 1.5;
     for (let i = 0; i < count; i++) {
       const [min, max] = newPeaks[i];
       let x = i - 0.5;
       ctx.beginPath();
-      ctx.strokeStyle = props.color1;
-      ctx.moveTo(x, centerY + min * height);
+      ctx.moveTo(x, centerY + min * eql);
       ctx.lineTo(x, centerY);
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.strokeStyle = props.color2;
       ctx.moveTo(x, centerY);
-      ctx.lineTo(x, centerY + max * height);
+      ctx.lineTo(x, centerY + max * eql);
       ctx.stroke();
     }
   };
@@ -67,15 +72,20 @@ export const Waver: React.FC<IWaver> = (props) => {
       setDpr(window.devicePixelRatio);
       repaint(peaks);
     }
-  }, [props.color1, props.color2]);
+  }, [props.color]);
 
   return (
     <canvas
       ref={canvasRef}
+      onClick={(e) => console.log(e)}
       className={'wave-canvas ' + props.className}
       style={{
         width: props.width + 'px',
         height: props.height + 'px',
+        borderRadius: '4px',
+        background: props.IsBackground
+          ? '#293246b5'
+          : 'linear-gradient(rgb(9, 74, 134), rgb(50, 64, 144))',
       }}
       width={props.width}
       height={props.height}
