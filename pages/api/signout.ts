@@ -8,9 +8,9 @@ export default async (req, res) => {
       secure: process.env.NODE_ENV !== `development`,
       sameSite: `lax`,
       path: `/`,
-    }),
+    })
   );
 
-  res.writeHead(302, { Location: `/` });
+  res.writeHead(302, { Location: `/login` });
   res.end();
 };

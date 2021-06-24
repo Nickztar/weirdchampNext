@@ -77,7 +77,7 @@ export const Nav = ({ user, showMovies }: NavProps) => {
             )}
 
             {/* {user.isAdmin && showMovies && <MovieModal />} */}
-            <Menu>
+            <Menu isLazy={true}>
               <MenuButton
                 mr={5}
                 as={Button}
