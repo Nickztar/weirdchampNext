@@ -9,12 +9,12 @@ async function useAPIAuth(
   JWT_SECRET = process.env.JWT_CODE
 ): Promise<UserType | false> {
   if (!req.headers.cookie) {
-    return null;
+    return false;
   }
 
   const { token } = parse(req.headers.cookie);
   if (!token) {
-    return null;
+    return false;
   }
   try {
     const { ...user } = verify(

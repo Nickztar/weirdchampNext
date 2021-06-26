@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { isAudio } from '../utils/utils';
 import { GetServerSideProps } from 'next';
 import { UserType } from '../models/user';
@@ -7,10 +7,11 @@ import LandingPage from '../components/LandingPage';
 import BannedPage from '../components/BannedPage';
 import { NextSeo } from 'next-seo';
 import AppLayout from '../components/AppLayout';
-import { useColorMode, useToast } from '@chakra-ui/react';
+import { Flex, Spinner, useToast } from '@chakra-ui/react';
 import Head from 'next/head';
 import CutterPicker from '../components/CutterPicker';
 import Cutter from '../components/Cutter';
+import { useRouter } from 'next/router';
 
 interface IAudioCutterProps {
   user: UserType | null;
@@ -21,6 +22,7 @@ export default function AudioCutter({
 }: IAudioCutterProps): React.ReactChild {
   const [file, setFile] = useState<File>(null);
   const toast = useToast();
+  const router = useRouter();
   const handleFileChange = async (file: File) => {
     if (file == null) {
       setFile(null);
@@ -43,15 +45,24 @@ export default function AudioCutter({
   };
 
   if (!user) {
-    return <LandingPage />;
+    //Fallback if we client side change user?
+    useEffect(() => {
+      router.push('/login');
+    }, [router]);
+    return (
+      <Flex w="100%" h="100%" alignItems="center" justifyContent="center">
+        <Spinner size="xl" />
+      </Flex>
+    );
   }
+
   if (user.isBanned) {
     return <BannedPage user={user} />;
   }
 
   return (
     <>
-      <NextSeo title="Upload" />
+      <NextSeo title="Audio cutter" />
       <Head>
         <>
           <script
@@ -77,7 +88,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const user: UserType = await parseUser(ctx);
 
   if (!user) {
-    return { props: { user: null } };
+    const res = ctx.res;
+    res.setHeader('location', '/login');
+    res.statusCode = 302;
+    res.end();
+    return { props: {} };
   }
   return { props: { user } };
 };

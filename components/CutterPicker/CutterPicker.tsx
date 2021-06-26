@@ -2,7 +2,11 @@ import {
   Box,
   Button,
   chakra,
+  Flex,
+  Heading,
+  Link,
   SimpleGrid,
+  useBreakpointValue,
   useColorModeValue,
 } from '@chakra-ui/react';
 import React, { ReactElement } from 'react';
@@ -15,6 +19,28 @@ interface ICutterPicker {
 }
 
 export const CutterPicker: React.FC<ICutterPicker> = ({ handleFileChange }) => {
+  const breakPointValue = useBreakpointValue({ base: false, md: true });
+
+  if (!breakPointValue) {
+    return (
+      <Flex
+        alignItems="center"
+        flexDir="column"
+        justifyContent="center"
+        h="50%"
+      >
+        <Heading as="h2" size="md">
+          Not available on mobile yet...
+        </Heading>
+        <Link href="/">
+          <Button my={4} colorScheme="purple">
+            Go home
+          </Button>
+        </Link>
+      </Flex>
+    );
+  }
+
   return (
     <Box>
       <chakra.h1 fontSize="4xl" textAlign="center" mb={10}>

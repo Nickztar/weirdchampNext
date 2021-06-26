@@ -1,27 +1,24 @@
-import { GetServerSideProps } from 'next';
 import React, { useEffect } from 'react';
-import { useQuery } from 'react-query';
-import HomePage from '../components/HomePage';
+import { GetServerSideProps } from 'next';
 import { UserType } from '../models/user';
 import { parseUser } from '../utils/parseDiscordUser';
-import { getSounds } from '../utils/queries';
 import BannedPage from '../components/BannedPage';
+import { NextSeo } from 'next-seo';
+import AppLayout from '../components/AppLayout';
+import { Flex, Spinner } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import { Spinner, Flex } from '@chakra-ui/react';
-import { S3File } from '../types/APITypes';
+import { getGuilds } from '../utils/queries';
+import { useQuery } from 'react-query';
+import TeamSplitting from '../components/TeamSplitting';
 
-interface HomePageProps {
+interface ITeamSplittingPageProps {
   user: UserType | null;
-  sounds: S3File[];
 }
 
-export default function Home({
+export default function TeamSplittingPage({
   user,
-  sounds,
-}: HomePageProps): React.ReactChild {
+}: ITeamSplittingPageProps): React.ReactChild {
   const router = useRouter();
-  const { soundID } = router.query;
-
   if (!user) {
     //Fallback if we client side change user?
     useEffect(() => {
@@ -37,10 +34,17 @@ export default function Home({
     return <BannedPage user={user} />;
   }
   //idk typescript well enough to know whats goin wrong here but | any ignores it :/
-  const data = useQuery(`sounds`, getSounds, {
-    initialData: sounds,
+  const data = useQuery(`guilds`, getGuilds, {
+    initialData: [],
   });
-  return <HomePage user={user} sounds={data} soundID={soundID} />;
+  return (
+    <>
+      <NextSeo title="Team splitting" />
+      <AppLayout user={user}>
+        <TeamSplitting data={data.data} />
+      </AppLayout>
+    </>
+  );
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -53,6 +57,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     res.end();
     return { props: {} };
   }
-  const sounds = await getSounds();
-  return { props: { user, sounds } };
+
+  return { props: { user } };
 };

@@ -72,7 +72,11 @@ function Users({ user, users }: UsersProps): React.ReactChild {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const user: UserType = await parseUser(ctx);
   if (!user) {
-    return { props: { user: null } };
+    const res = ctx.res;
+    res.setHeader('location', '/login');
+    res.statusCode = 302;
+    res.end();
+    return { props: {} };
   }
   const users = await getUsers();
   return { props: { user, users } };

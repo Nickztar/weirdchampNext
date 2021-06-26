@@ -23,7 +23,8 @@ import { UserType } from '../../models/user';
 
 const links = [
   { link: `/`, name: `Home` },
-  { link: `/audiocutter`, name: `Audio cutter` },
+  { link: `/audiocutter`, name: `Audio cutter`, hideMobile: true },
+  { link: `/teamsplitting`, name: `Team splitting`, hideMobile: true },
   { link: `/users`, name: `All Users`, adminOnly: true },
 ];
 
@@ -98,7 +99,15 @@ export const Nav = ({ user, showMovies }: NavProps) => {
                   }
                   return (
                     <Link href={link.link} key={i.toString()}>
-                      <MenuItem>{link.name}</MenuItem>
+                      <MenuItem
+                        display={
+                          link.hideMobile
+                            ? { base: 'none', md: 'unset' }
+                            : 'unset'
+                        }
+                      >
+                        {link.name}
+                      </MenuItem>
                     </Link>
                   );
                 })}

@@ -1,22 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import {
-  IoCloudDownload,
-  IoMusicalNotes,
-  IoPause,
-  IoPlaySharp,
-  IoReload,
-  IoTrash,
-} from 'react-icons/io5';
-import { Spinner } from '@chakra-ui/react';
 import { useColorMode } from '@chakra-ui/react';
-import { download, readBlobURL, rename } from '../../utils/utils';
 import WebAudio from '../../utils/webaudio';
-import { sliceAudioBuffer } from '../../utils/audio-helper';
 import Player from '../Player';
-import FilePicker from '../FilePicker';
 import AudioController from '../AudioController';
-
-const containerWidth = 1000;
 
 interface ICutterProps {
   file: File;
@@ -30,9 +16,6 @@ export const Cutter: React.FC<ICutterProps> = ({ file, handleFileChange }) => {
   const [startTime, setStartTime] = useState<number>(0);
   const [endTime, setEndTime] = useState<number>(4);
   const [currentTime, setCurrentTime] = useState<number>(0);
-  const [processing, setProcessing] = useState<boolean>(false);
-
-  const { colorMode } = useColorMode();
 
   const handleCancel = () => {
     handleFileChange(null);
@@ -42,7 +25,6 @@ export const Cutter: React.FC<ICutterProps> = ({ file, handleFileChange }) => {
     setStartTime(0);
     setEndTime(4);
     setCurrentTime(0);
-    setProcessing(false);
   };
 
   useEffect(() => {
@@ -108,7 +90,7 @@ export const Cutter: React.FC<ICutterProps> = ({ file, handleFileChange }) => {
                 isPaused={paused}
                 startTime={startTime}
                 endTime={endTime}
-                handleCancel={() => handleFileChange(null)}
+                handleCancel={handleCancel}
                 fileName={file.name}
                 handlePlayPauseClick={handlePlayPauseClick}
                 handleReplayClick={handleReplayClick}

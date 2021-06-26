@@ -77,7 +77,6 @@ export const Waver: React.FC<IWaver> = (props) => {
   return (
     <canvas
       ref={canvasRef}
-      onClick={(e) => console.log(e)}
       className={'wave-canvas ' + props.className}
       style={{
         width: props.width + 'px',
