@@ -1,5 +1,5 @@
 const ContentSecurityPolicy = `
-  default-src 'self';
+  default-src 'self' vitals.vercel-insights.com;
   script-src 'self' 'unsafe-eval' 'unsafe-inline' *.weirchamp.wtf;
   style-src 'self' 'unsafe-inline' *.googleapis.com;
   img-src * blob: data:;
