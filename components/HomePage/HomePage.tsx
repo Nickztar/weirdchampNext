@@ -9,14 +9,16 @@ import { S3File } from '../../types/APITypes';
 
 interface HomePageProps {
   user: UserType;
-  sounds: { data: S3File[] };
+  sounds: S3File[];
   soundID: string | string[];
+  isFetching: boolean;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({
   user,
   sounds,
   soundID,
+  isFetching,
 }): React.ReactElement => {
   const { colorMode } = useColorMode();
   const toast = useToast();
@@ -46,11 +48,24 @@ export const HomePage: React.FC<HomePageProps> = ({
   }, []);
   return (
     <>
-      <NextSeo title="Home" />
+      <NextSeo
+        openGraph={{
+          title: `Weirdchamp`,
+          type: `website`,
+          site_name: `Weirdchamp`,
+        }}
+        title="Home"
+        description={'A private discord bot website'}
+      />
 
       <AppLayout user={user} showMovies>
         <div>
-          <CardGrid sounds={sounds} user={user} soundID={soundID} />
+          <CardGrid
+            sounds={sounds}
+            user={user}
+            soundID={soundID}
+            isFetching={isFetching}
+          />
         </div>
       </AppLayout>
     </>

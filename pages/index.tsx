@@ -36,11 +36,18 @@ export default function Home({
   if (user.isBanned) {
     return <BannedPage user={user} />;
   }
-  //idk typescript well enough to know whats goin wrong here but | any ignores it :/
-  const data = useQuery(`sounds`, getSounds, {
+  const { data, isFetching } = useQuery(`sounds`, getSounds, {
     initialData: sounds,
+    refetchInterval: 10 * 1000, //Fetch new data every 10 seconds :D
   });
-  return <HomePage user={user} sounds={data} soundID={soundID} />;
+  return (
+    <HomePage
+      user={user}
+      sounds={data}
+      soundID={soundID}
+      isFetching={isFetching}
+    />
+  );
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {

@@ -17,11 +17,12 @@ import {
   useColorModeValue,
   useToast,
   useColorMode,
+  Spinner,
 } from '@chakra-ui/react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { BiChevronDown } from 'react-icons/bi';
 import React, { useState } from 'react';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import Card from '../Card';
 import { UserType } from '../../models/user';
 import { NextSeo } from 'next-seo';
@@ -29,15 +30,17 @@ import { PlayEndpointBodyType, S3File } from '../../types/APITypes';
 import PreviewButton from '../PreviewButton';
 
 interface CardGridProps {
-  sounds: { data: S3File[] };
+  sounds: S3File[];
   user: UserType;
   soundID?: string | string[];
+  isFetching: boolean;
 }
 
 export const CardGrid: React.FC<CardGridProps> = ({
   sounds: unSortedSounds,
   user,
   soundID,
+  isFetching,
 }): React.ReactElement => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [filter, setFilter] = useState('');
@@ -106,60 +109,72 @@ export const CardGrid: React.FC<CardGridProps> = ({
   };
 
   const sounds = {
-    data: unSortedSounds?.data
-      .filter((mv) => {
-        if (mv.Key.toLowerCase().includes(filter.toLowerCase())) {
-          return true;
-        }
-        return false;
-      })
-      .sort((a, b) => {
-        if (sort === 'recent') {
-          return (
-            new Date(b.LastModified).getTime() -
-            new Date(a.LastModified).getTime()
-          );
-        } else if (sort === 'old') {
-          return (
-            new Date(a.LastModified).getTime() -
-            new Date(b.LastModified).getTime()
-          );
-        } else if (sort === 'best') {
-          return a.Size - b.Size;
-        } else if (sort === 'worst') {
-          return b.Size - a.Size;
-        } else if (sort === 'name') {
-          const nameA = a.Key.toLowerCase();
-          const nameB = b.Key.toLowerCase();
-          if (nameA < nameB)
-            //sort string ascending
-            return -1;
-          if (nameA > nameB) return 1;
-          return 0; //default return value (no sorting)
-        }
-      }),
+    data: useMemo(
+      () =>
+        unSortedSounds
+          ?.filter((mv) => {
+            if (mv.Key.toLowerCase().includes(filter.toLowerCase())) {
+              return true;
+            }
+            return false;
+          })
+          .sort((a, b) => {
+            if (sort === 'recent') {
+              return (
+                new Date(b.LastModified).getTime() -
+                new Date(a.LastModified).getTime()
+              );
+            } else if (sort === 'old') {
+              return (
+                new Date(a.LastModified).getTime() -
+                new Date(b.LastModified).getTime()
+              );
+            } else if (sort === 'best') {
+              return a.Size - b.Size;
+            } else if (sort === 'worst') {
+              return b.Size - a.Size;
+            } else if (sort === 'name') {
+              const nameA = a.Key.toLowerCase();
+              const nameB = b.Key.toLowerCase();
+              if (nameA < nameB)
+                //sort string ascending
+                return -1;
+              if (nameA > nameB) return 1;
+              return 0; //default return value (no sorting)
+            }
+          }),
+      [unSortedSounds, sort]
+    ),
   };
 
   return (
     <>
-      <NextSeo
-        openGraph={{
-          title: `Weirdchamp`,
-          type: `website`,
-          site_name: `Weirdchamp`,
-        }}
-        description={'A private discord bot website'}
-      />
       <Container maxW="container.xl" mt={10}>
-        <Heading fontSize="6xl" textAlign="center">
-          We have{' '}
-          {
-            <chakra.span color={useColorModeValue('purple.500', 'purple.300')}>
-              {unSortedSounds?.data?.length}
-            </chakra.span>
-          }{' '}
-          sounds
-        </Heading>
+        <Flex alignItems="center" justifyContent="center" width="full">
+          <Box mx={4} width="3rem" height="3rem" />
+          <Heading fontSize="6xl" textAlign="center">
+            We have{' '}
+            {
+              <chakra.span
+                color={useColorModeValue('purple.500', 'purple.300')}
+              >
+                {unSortedSounds?.length}
+              </chakra.span>
+            }{' '}
+            sounds
+          </Heading>
+          {isFetching ? (
+            <Spinner
+              mx={4}
+              color="purple.300"
+              thickness="4px"
+              size="xl"
+              emptyColor="gray.200"
+            />
+          ) : (
+            <Box mx={4} width="3rem" height="3rem" />
+          )}
+        </Flex>
         <Flex
           width="full"
           direction={{ base: 'column', md: 'row' }}
