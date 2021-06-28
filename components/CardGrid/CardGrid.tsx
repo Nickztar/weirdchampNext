@@ -25,9 +25,9 @@ import React, { useState } from 'react';
 import { useEffect, useMemo } from 'react';
 import Card from '../Card';
 import { UserType } from '../../models/user';
-import { NextSeo } from 'next-seo';
 import { PlayEndpointBodyType, S3File } from '../../types/APITypes';
 import PreviewButton from '../PreviewButton';
+import LazyLoad from 'react-lazy-load';
 
 interface CardGridProps {
   sounds: S3File[];
@@ -245,21 +245,23 @@ export const CardGrid: React.FC<CardGridProps> = ({
           alignItems="stretch"
         >
           {sounds.data?.map((sound: S3File, i) => (
-            <Flex key={`${i.toString()}flex`} maxW="100%">
-              <Box
-                height="full"
-                width="full"
-                maxW="80%"
-                key={`${i.toString()}cardBox`}
-                onClick={() => {
-                  handlePlay(sound);
-                  return onOpen();
-                }}
-              >
-                <Card sound={sound} key={`${i.toString()}card`} />
-              </Box>
-              <PreviewButton SongKey={sound.Key} Index={i} />
-            </Flex>
+            <LazyLoad height={84} offset={84 * 3} key={`${i.toString()}flex`}>
+              <Flex maxW="100%">
+                <Box
+                  height="full"
+                  width="full"
+                  maxW="80%"
+                  key={`${i.toString()}cardBox`}
+                  onClick={() => {
+                    handlePlay(sound);
+                    return onOpen();
+                  }}
+                >
+                  <Card sound={sound} key={`${i.toString()}card`} />
+                </Box>
+                <PreviewButton SongKey={sound.Key} Index={i} />
+              </Flex>
+            </LazyLoad>
           ))}
         </SimpleGrid>
       </Container>
