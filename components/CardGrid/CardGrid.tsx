@@ -18,16 +18,16 @@ import {
   useToast,
   useColorMode,
   Spinner,
+  Skeleton,
 } from '@chakra-ui/react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { BiChevronDown } from 'react-icons/bi';
 import React, { useState } from 'react';
-import { useEffect, useMemo } from 'react';
-import Card from '../Card';
+import { useEffect, useMemo, useRef } from 'react';
 import { UserType } from '../../models/user';
 import { PlayEndpointBodyType, S3File } from '../../types/APITypes';
-import PreviewButton from '../PreviewButton';
-import LazyLoad from 'react-lazy-load';
+import LazyLoad from 'react-lazyload';
+import SoundCard from '../SoundCard';
 
 interface CardGridProps {
   sounds: S3File[];
@@ -45,7 +45,7 @@ export const CardGrid: React.FC<CardGridProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [filter, setFilter] = useState('');
   const [sort, setSort] = useState('recent');
-
+  const gridRef = useRef(null);
   const toast = useToast();
   const { colorMode } = useColorMode();
   // Fix for https://github.com/chakra-ui/chakra-ui/issues/3076
@@ -150,8 +150,12 @@ export const CardGrid: React.FC<CardGridProps> = ({
   return (
     <>
       <Container maxW="container.xl" mt={10}>
-        <Flex alignItems="center" justifyContent="center" width="full">
-          <Box mx={4} width="3rem" height="3rem" />
+        <Flex
+          alignItems="center"
+          justifyContent="center"
+          width="full"
+          position="relative"
+        >
           <Heading fontSize="6xl" textAlign="center">
             We have{' '}
             {
@@ -163,16 +167,17 @@ export const CardGrid: React.FC<CardGridProps> = ({
             }{' '}
             sounds
           </Heading>
-          {isFetching ? (
+          {isFetching && (
             <Spinner
               mx={4}
+              position="absolute"
+              top="-3rem"
+              right={0}
               color="purple.300"
               thickness="4px"
               size="xl"
               emptyColor="gray.200"
             />
-          ) : (
-            <Box mx={4} width="3rem" height="3rem" />
           )}
         </Flex>
         <Flex
@@ -242,25 +247,26 @@ export const CardGrid: React.FC<CardGridProps> = ({
         <SimpleGrid
           columns={{ base: 1, md: 2, lg: 3 }}
           spacing={10}
+          ref={gridRef}
           alignItems="stretch"
         >
           {sounds.data?.map((sound: S3File, i) => (
-            <LazyLoad height={84} offset={84 * 3} key={`${i.toString()}flex`}>
-              <Flex maxW="100%">
-                <Box
-                  height="full"
-                  width="full"
-                  maxW="80%"
-                  key={`${i.toString()}cardBox`}
-                  onClick={() => {
-                    handlePlay(sound);
-                    return onOpen();
-                  }}
-                >
-                  <Card sound={sound} key={`${i.toString()}card`} />
-                </Box>
-                <PreviewButton SongKey={sound.Key} Index={i} />
-              </Flex>
+            <LazyLoad
+              placeholder={
+                <Skeleton height={84} borderRadius={10} w={'100%'}></Skeleton>
+              }
+              height={84}
+              scrollContainer={'#__next'}
+              key={`${i.toString()}flex`}
+            >
+              <SoundCard
+                handleClick={() => {
+                  handlePlay(sound);
+                  return onOpen();
+                }}
+                index={i}
+                sound={sound}
+              />
             </LazyLoad>
           ))}
         </SimpleGrid>
