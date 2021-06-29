@@ -28,20 +28,22 @@ import { UserType } from '../../models/user';
 import { PlayEndpointBodyType, S3File } from '../../types/APITypes';
 import LazyLoad from 'react-lazyload';
 import SoundCard from '../SoundCard';
+import { getSounds } from '../../utils/queries';
+import { useQuery } from 'react-query';
 
 interface CardGridProps {
-  sounds: S3File[];
   user: UserType;
   soundID?: string | string[];
-  isFetching: boolean;
 }
 
 export const CardGrid: React.FC<CardGridProps> = ({
-  sounds: unSortedSounds,
   user,
   soundID,
-  isFetching,
 }): React.ReactElement => {
+  const { data, isFetching } = useQuery(`sounds`, getSounds, {
+    initialData: [],
+    refetchInterval: 20 * 1000, //Fetch new data every 20 seconds :D
+  });
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [filter, setFilter] = useState('');
   const [sort, setSort] = useState('recent');
@@ -111,7 +113,7 @@ export const CardGrid: React.FC<CardGridProps> = ({
   const sounds = {
     data: useMemo(
       () =>
-        unSortedSounds
+        data
           ?.filter((mv) => {
             if (mv.Key.toLowerCase().includes(filter.toLowerCase())) {
               return true;
@@ -129,9 +131,9 @@ export const CardGrid: React.FC<CardGridProps> = ({
                 new Date(a.LastModified).getTime() -
                 new Date(b.LastModified).getTime()
               );
-            } else if (sort === 'best') {
+            } else if (sort === 'smallest') {
               return a.Size - b.Size;
-            } else if (sort === 'worst') {
+            } else if (sort === 'biggest') {
               return b.Size - a.Size;
             } else if (sort === 'name') {
               const nameA = a.Key.toLowerCase();
@@ -143,7 +145,7 @@ export const CardGrid: React.FC<CardGridProps> = ({
               return 0; //default return value (no sorting)
             }
           }),
-      [unSortedSounds, sort]
+      [data, sort]
     ),
   };
 
@@ -162,7 +164,7 @@ export const CardGrid: React.FC<CardGridProps> = ({
               <chakra.span
                 color={useColorModeValue('purple.500', 'purple.300')}
               >
-                {unSortedSounds?.length}
+                {data?.length}
               </chakra.span>
             }{' '}
             sounds
@@ -222,15 +224,15 @@ export const CardGrid: React.FC<CardGridProps> = ({
               </MenuItem>
               <MenuItem
                 zIndex={999}
-                isDisabled={sort === 'best'}
-                onClick={() => setSort('best')}
+                isDisabled={sort === 'smallest'}
+                onClick={() => setSort('smallest')}
               >
                 Smallest
               </MenuItem>
               <MenuItem
                 zIndex={999}
-                isDisabled={sort === 'worst'}
-                onClick={() => setSort('worst')}
+                isDisabled={sort === 'biggest'}
+                onClick={() => setSort('biggest')}
               >
                 Biggest
               </MenuItem>
@@ -250,25 +252,35 @@ export const CardGrid: React.FC<CardGridProps> = ({
           ref={gridRef}
           alignItems="stretch"
         >
-          {sounds.data?.map((sound: S3File, i) => (
-            <LazyLoad
-              placeholder={
-                <Skeleton height={84} borderRadius={10} w={'100%'}></Skeleton>
-              }
-              height={84}
-              scrollContainer={'#__next'}
-              key={`${i.toString()}flex`}
-            >
-              <SoundCard
-                handleClick={() => {
-                  handlePlay(sound);
-                  return onOpen();
-                }}
-                index={i}
-                sound={sound}
-              />
-            </LazyLoad>
-          ))}
+          {sounds.data != null ? (
+            sounds.data.map((sound: S3File, i) => (
+              <LazyLoad
+                placeholder={
+                  <Skeleton height={84} borderRadius={10} w={'100%'}></Skeleton>
+                }
+                height={84}
+                scrollContainer={'#__next'}
+                key={`${i.toString()}flex`}
+              >
+                <SoundCard
+                  handleClick={() => {
+                    handlePlay(sound);
+                    return onOpen();
+                  }}
+                  index={i}
+                  sound={sound}
+                />
+              </LazyLoad>
+            ))
+          ) : (
+            <>
+              <Skeleton height={84} borderRadius={10} w={'100%'}></Skeleton>
+              <Skeleton height={84} borderRadius={10} w={'100%'}></Skeleton>
+              <Skeleton height={84} borderRadius={10} w={'100%'}></Skeleton>
+              <Skeleton height={84} borderRadius={10} w={'100%'}></Skeleton>
+              <Skeleton height={84} borderRadius={10} w={'100%'}></Skeleton>
+            </>
+          )}
         </SimpleGrid>
       </Container>
     </>

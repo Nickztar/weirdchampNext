@@ -2,23 +2,17 @@ import { useEffect } from 'react';
 import { useColorMode, useToast } from '@chakra-ui/react';
 import AppLayout from '../AppLayout';
 import CardGrid from '../CardGrid';
-import { MovieType } from '../../models/movie';
 import { UserType } from '../../models/user';
 import { NextSeo } from 'next-seo';
-import { S3File } from '../../types/APITypes';
 
 interface HomePageProps {
   user: UserType;
-  sounds: S3File[];
   soundID: string | string[];
-  isFetching: boolean;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({
   user,
-  sounds,
   soundID,
-  isFetching,
 }): React.ReactElement => {
   const { colorMode } = useColorMode();
   const toast = useToast();
@@ -60,12 +54,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
       <AppLayout user={user} showMovies>
         <div>
-          <CardGrid
-            sounds={sounds}
-            user={user}
-            soundID={soundID}
-            isFetching={isFetching}
-          />
+          <CardGrid user={user} soundID={soundID} />
         </div>
       </AppLayout>
     </>

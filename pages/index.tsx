@@ -1,24 +1,17 @@
 import { GetServerSideProps } from 'next';
 import React, { useEffect } from 'react';
-import { useQuery } from 'react-query';
 import HomePage from '../components/HomePage';
 import { UserType } from '../models/user';
 import { parseUser } from '../utils/parseDiscordUser';
-import { getSounds } from '../utils/queries';
 import BannedPage from '../components/BannedPage';
 import { useRouter } from 'next/router';
 import { Spinner, Flex } from '@chakra-ui/react';
-import { S3File } from '../types/APITypes';
 
 interface HomePageProps {
   user: UserType | null;
-  sounds: S3File[];
 }
 
-export default function Home({
-  user,
-  sounds,
-}: HomePageProps): React.ReactChild {
+export default function Home({ user }: HomePageProps): React.ReactChild {
   const router = useRouter();
   const { soundID } = router.query;
 
@@ -36,18 +29,7 @@ export default function Home({
   if (user.isBanned) {
     return <BannedPage user={user} />;
   }
-  const { data, isFetching } = useQuery(`sounds`, getSounds, {
-    initialData: sounds,
-    refetchInterval: 20 * 1000, //Fetch new data every 20 seconds :D
-  });
-  return (
-    <HomePage
-      user={user}
-      sounds={data}
-      soundID={soundID}
-      isFetching={isFetching}
-    />
-  );
+  return <HomePage user={user} soundID={soundID} />;
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -60,6 +42,5 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     res.end();
     return { props: {} };
   }
-  const sounds = await getSounds();
-  return { props: { user, sounds } };
+  return { props: { user } };
 };
