@@ -28,11 +28,11 @@ function MyApp({ Component, pageProps }: AppProps): React.ReactChild {
         }}
       />
       <PlausibleProvider
-        domain="weirdchamp-next.vercel.app"
+        domain="weirdchamp.wtf"
         selfHosted
         trackOutboundLinks
         enabled={process.env.NODE_ENV === 'production'}
-        customDomain={'https://weirdchamp-next.vercel.app'}
+        customDomain={process.env.NEXT_PUBLIC_APP_URI}
       >
         <QueryClientProvider client={queryClient}>
           <ChakraProvider theme={theme}>
