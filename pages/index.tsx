@@ -38,7 +38,7 @@ export default function Home({
   }
   const { data, isFetching } = useQuery(`sounds`, getSounds, {
     initialData: sounds,
-    refetchInterval: 10 * 1000, //Fetch new data every 10 seconds :D
+    refetchInterval: 20 * 1000, //Fetch new data every 20 seconds :D
   });
   return (
     <HomePage
