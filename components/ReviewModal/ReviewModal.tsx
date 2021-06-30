@@ -134,7 +134,7 @@ export const ReviewModal = ({ isAdmin }) => {
                 onChange={(e) => {
                   e.preventDefault();
                   const movieFound = movies.filter(
-                    (mv) => mv.Key === e.target.value
+                    (mv) => mv.key === e.target.value
                   )[0];
                   if (!movieFound) {
                     return setMovieError(`Please select a valid movie!`);
@@ -145,7 +145,7 @@ export const ReviewModal = ({ isAdmin }) => {
               >
                 {movies &&
                   movies?.map((file: S3File) => (
-                    <option key={file.Key}>{file.Key}</option>
+                    <option key={file.key}>{file.key}</option>
                   ))}
               </Select>
               {movieError && (
