@@ -55,7 +55,7 @@ export const SoundModal = ({ isAdmin }) => {
 
   useEffect(() => {
     if (success) {
-      queryClient.invalidateQueries(`movies`).catch(console.error);
+      queryClient.invalidateQueries(`sounds`).catch(console.error);
       toast({
         variant: `subtle`,
         title: success === `addition` ? `Sound Added` : `Sound Modified`,
@@ -93,7 +93,7 @@ export const SoundModal = ({ isAdmin }) => {
     if (!file) {
       return setSoundError(`Please select a valid sound!.`);
     } else if (
-      sounds.filter((x) => x.Key.replace(/(.wav)|(.mp3)/gm, '') === soundName)
+      sounds.filter((x) => x.key.replace(/(.wav)|(.mp3)/gm, '') === soundName)
         .length != 0
     ) {
       return setSoundNameError(`Please select a unique sound name!.`);
@@ -105,26 +105,20 @@ export const SoundModal = ({ isAdmin }) => {
       localSoundName += fileExt;
 
     const filename = encodeURIComponent(localSoundName);
-    const res = await fetch(
-      `/api/upload-url?file=${filename}&filetype=${file.type}`
-    );
-    const jsonResponse = await res.json();
-
     try {
       const newFile = new File([file], localSoundName);
-      const upload = await axios.put(jsonResponse.url, newFile, {
-        headers: { 'Content-type': file.type },
-      });
+      const formData = new FormData();
+      formData.append('file', newFile);
+      const upload = await axios.put(
+        `/api/upload-url?file=${filename}&filetype=${file.type}`,
+        formData,
+        {
+          headers: { 'Content-type': 'multipart/form-data' },
+        }
+      );
 
       if (upload.status == 200) {
-        const resp = await axios.get(
-          process.env.BOT_URL + '/api/bot/fetchSounds'
-        );
-        if (resp.status == 200) {
-          setSuccess('addition');
-        } else {
-          setSuccess('addition');
-        }
+        setSuccess('addition');
       } else {
         toast({
           variant: `subtle`,

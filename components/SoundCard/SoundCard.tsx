@@ -19,7 +19,7 @@ export const SoundCard: React.FC<ISoundCardProps> = ({
       <Box height="full" width="full" maxW="80%" onClick={handleClick}>
         <Card sound={sound} key={`${index.toString()}card`} />
       </Box>
-      <PreviewButton SongKey={sound.Key} Index={index} />
+      <PreviewButton SongKey={sound.key} hash={sound.NameHash} Index={index} />
     </Flex>
   );
 };

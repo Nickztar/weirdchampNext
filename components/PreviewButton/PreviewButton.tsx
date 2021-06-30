@@ -7,15 +7,16 @@ import { sha256, useHash } from '../Hashvatar/Hashvatar';
 
 interface IPreviewButtonProps {
   SongKey: string;
+  hash: string;
   Index: number;
 }
 
 export const PreviewButton: React.FC<IPreviewButtonProps> = ({
   SongKey,
   Index,
+  hash,
 }) => {
   const toast = useToast();
-  const hash = useHash(SongKey);
   const handlePreview = async (key: string) => {
     if (!key) {
       return;
@@ -65,7 +66,9 @@ export const PreviewButton: React.FC<IPreviewButtonProps> = ({
         minH="100%"
         aria-label="Play preview"
         onClick={() => handlePreview(SongKey)}
-        icon={<Hashvatar hash={hash} showGrid variant="spider" w="100%" h="100%" />}
+        icon={
+          <Hashvatar hash={hash} showGrid variant="spider" w="100%" h="100%" />
+        }
       />
     </Tooltip>
   );

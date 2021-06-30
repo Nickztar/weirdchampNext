@@ -5,12 +5,9 @@ import axios from 'axios';
 import { DiscordUser } from '../../types/generalTypes';
 import User from '../../models/user';
 import dbConnect from '../../utils/dbConnect';
-import {
-  MovieEndpointBodyType,
-  PlayEndpointBodyType,
-  S3File,
-} from '../../types/APITypes';
+import { PlayEndpointBodyType, S3File } from '../../types/APITypes';
 import { useAPIAuth } from '../../utils/useAPIAuth';
+import Sounds from '../../models/sounds';
 
 const SoundAPI = async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -40,35 +37,6 @@ const SoundAPI = async (req: NextApiRequest, res: NextApiResponse) => {
         `${process.env.BOT_URL}/api/bot/specific`,
         data
       );
-      // const { data: movieData, status: movieStatus } = await axios.get(
-      //   `https://api.themoviedb.org/3/movie/${movieID}?api_key=${process.env.MOVIE_API_KEY}&language=en-US`
-      // );
-
-      // if (movieStatus !== 200 || movieData.status_code) {
-      //   return res.status(movieStatus);
-      // }
-
-      // const existingMovie = await Movie.findOne({ movieID });
-      // if (existingMovie) {
-      //   return res.status(400).send({ message: `Movie already exists!` });
-      // }
-
-      // const genres = movieData?.genres?.map((genre) => {
-      //   return genre.name;
-      // });
-
-      // const newMovie: MovieType = new Movie({
-      //   name: movieData.original_title,
-      //   movieID,
-      //   genres: [...genres],
-      //   image: `https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`,
-      //   description: movieData.overview,
-      //   tagLine: movieData.tagline,
-      //   rating: 0,
-      //   numReviews: 0,
-      //   reviews: [],
-      // });
-      // await newMovie.save();
       return res
         .status(200)
         .send({ data: response.data as boolean, type: `addition` });
@@ -79,12 +47,8 @@ const SoundAPI = async (req: NextApiRequest, res: NextApiResponse) => {
   } else if (req.method === `GET`) {
     try {
       //Fetch sounds from weirdchamp bot.
-      const files = await axios.get(`${process.env.BOT_URL}/api/bot/files`);
-      // const movies = await Movie.find({}).populate(
-      //   `reviews.user`,
-      //   `avatar username id discriminator`
-      // );
-      return res.status(200).send({ data: files.data as Array<S3File> });
+      const files = await Sounds.find({});
+      return res.status(200).send({ data: files as S3File[] });
     } catch (err) {
       console.error(err);
       return res.status(500);
@@ -97,15 +61,6 @@ const SoundAPI = async (req: NextApiRequest, res: NextApiResponse) => {
         .status(401)
         .json({ message: `You are unauthorized to use that :(` });
     }
-
-    // const movie = await Movie.findOne({ _id: id });
-    // if (!movie) {
-    //   return res.status(404);
-    // }
-    // const deletedMovie = await Movie.deleteOne({ _id: id });
-    // if (deletedMovie.ok === 1) {
-    //   return res.status(200).json(movie);
-    // }
 
     return res.status(500);
   } else {

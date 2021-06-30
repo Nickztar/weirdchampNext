@@ -2,11 +2,12 @@ export interface MovieEndpointBodyType {
   id: string;
 }
 export interface S3File {
-  Key: string;
-  LastModified: Date;
-  ETag: string;
+  DisplayName: string;
+  key: string;
+  CreatedBy: string;
   Size: number;
-  StorageClass: string;
+  LastModified?: Date | number;
+  NameHash: string;
 }
 export interface PlayEndpointBodyType {
   soundID?: string;

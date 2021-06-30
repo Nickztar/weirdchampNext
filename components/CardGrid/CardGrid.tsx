@@ -64,7 +64,7 @@ export const CardGrid: React.FC<CardGridProps> = ({
 
   useEffect(() => {
     if (soundID && !isOpen) {
-      const foundSound = sounds.data.find((mv) => mv.Key === soundID);
+      const foundSound = sounds.data.find((mv) => mv.DisplayName === soundID);
       if (!foundSound) {
         toast({
           id: 'otherToast',
@@ -90,7 +90,7 @@ export const CardGrid: React.FC<CardGridProps> = ({
 
     const data: PlayEndpointBodyType = {
       // eslint-disable-next-line no-underscore-dangle
-      soundID: sound.Key,
+      soundID: sound.key,
       channelID: '621035571057524737',
     };
 
@@ -115,7 +115,7 @@ export const CardGrid: React.FC<CardGridProps> = ({
       () =>
         data
           ?.filter((mv) => {
-            if (mv.Key.toLowerCase().includes(filter.toLowerCase())) {
+            if (mv.DisplayName.toLowerCase().includes(filter.toLowerCase())) {
               return true;
             }
             return false;
@@ -136,8 +136,8 @@ export const CardGrid: React.FC<CardGridProps> = ({
             } else if (sort === 'biggest') {
               return b.Size - a.Size;
             } else if (sort === 'name') {
-              const nameA = a.Key.toLowerCase();
-              const nameB = b.Key.toLowerCase();
+              const nameA = a.DisplayName.toLowerCase();
+              const nameB = b.DisplayName.toLowerCase();
               if (nameA < nameB)
                 //sort string ascending
                 return -1;
