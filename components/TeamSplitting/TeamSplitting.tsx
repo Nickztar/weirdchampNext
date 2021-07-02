@@ -5,6 +5,7 @@ import { DiscordChannel, DiscordGuild } from '../../types/DiscordTypes';
 import ChannelSelection from '../ChannelSelection';
 import GuildSelection from '../GuildSelection';
 import TeamDivision from '../TeamDivision';
+import { generate } from 'shortid';
 
 interface ITeamSplittingProps {
   data: DiscordGuild[];
@@ -16,6 +17,20 @@ export const TeamSplitting: React.FC<ITeamSplittingProps> = ({ data }) => {
     [DiscordChannel?, DiscordChannel?]
   >(null);
   const breakPointValue = useBreakpointValue({ base: false, md: true });
+
+  const handleSkip = () => {
+    const placeHolder: DiscordGuild = {
+      id: generate(),
+      name: 'string',
+      icon: 'string',
+      channels: [
+        { id: generate(), name: 'Team 1', currentUsers: [] },
+        { id: generate(), name: 'Team 2', currentUsers: [] },
+      ],
+    };
+    setGuild(placeHolder);
+    setSelectedChannels([placeHolder.channels[0], placeHolder.channels[1]]);
+  };
 
   if (!breakPointValue) {
     return (
@@ -38,7 +53,9 @@ export const TeamSplitting: React.FC<ITeamSplittingProps> = ({ data }) => {
   }
 
   if (guild == null) {
-    return <GuildSelection guilds={data} onGuildSet={setGuild} />;
+    return (
+      <GuildSelection guilds={data} onGuildSet={setGuild} onSkip={handleSkip} />
+    );
   } else if (channels == null) {
     return (
       <ChannelSelection

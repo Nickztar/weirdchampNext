@@ -8,10 +8,12 @@ import {
 import { DragDropContext } from 'react-beautiful-dnd';
 import { reorderColumns } from '../../utils/reorder';
 import TeamList from '../TeamList';
-import { Box, Button, Flex, useToast } from '@chakra-ui/react';
+import { Box, Button, Flex, Icon, useToast } from '@chakra-ui/react';
 import TeamControlls from '../TeamControlls';
 import { ShuffleArray } from '../../utils/shuffle';
 import { generate } from 'shortid';
+import { FiMove } from 'react-icons/fi';
+import { FaRandom } from 'react-icons/fa';
 
 interface ITeamDivisionProps {
   guild: DiscordGuild;
@@ -54,7 +56,7 @@ export const TeamDivision: React.FC<ITeamDivisionProps> = ({
     );
   };
 
-  const addPlaceholder = (name: string) => {
+  const addPlaceholder = (name: string, idx: number) => {
     const newUser: TeamPlayer = {
       id: generate(),
       name: name,
@@ -63,7 +65,7 @@ export const TeamDivision: React.FC<ITeamDivisionProps> = ({
     };
     setColumns(
       columns.map((c, i) => {
-        if (i == 0) {
+        if (i == idx) {
           c.currentUsers = [...c.currentUsers, newUser];
         }
         return c;
@@ -151,9 +153,30 @@ export const TeamDivision: React.FC<ITeamDivisionProps> = ({
 
   return (
     <Flex flexDir="column" alignItems="center" h="70%">
-      <Button variant="solid" colorScheme="purple" onClick={changeServer}>
-        Change server
-      </Button>
+      <Flex align="center" justify="center" w="100%" mb={4}>
+        <Button variant="solid" colorScheme="purple" onClick={changeServer}>
+          Change server
+        </Button>
+        <Button
+          colorScheme="blue"
+          textAlign="center"
+          ml={2}
+          onClick={randomizeUsers}
+          isLoading={isLoading}
+        >
+          Randomize <Icon as={FaRandom} ml={2} />
+        </Button>
+        <Button
+          colorScheme="purple"
+          textAlign="center"
+          onClick={handleMove}
+          ml={2}
+          isLoading={isLoading}
+        >
+          Confirm <Icon as={FiMove} ml={2} />
+        </Button>
+      </Flex>
+
       <Flex justifyContent="space-evenly" h="100%">
         <DragDropContext
           onDragEnd={({ destination, source }) => {
@@ -170,19 +193,20 @@ export const TeamDivision: React.FC<ITeamDivisionProps> = ({
             listType="CARD"
             channel={columns[0]}
             toggleIgnored={toggleUser}
+            onPlaceholderAdd={(name) => addPlaceholder(name, 0)}
           />
-          <TeamControlls
+          {/* <TeamControlls
             onRandomize={randomizeUsers}
-            onAddUser={addPlaceholder}
             onConfirm={handleMove}
             isLoading={isLoading}
-          />
+          /> */}
           <TeamList
             key={columns[1].id}
             listId={columns[1].id}
             listType="CARD"
             channel={columns[1]}
             toggleIgnored={toggleUser}
+            onPlaceholderAdd={(name) => addPlaceholder(name, 1)}
           />
         </DragDropContext>
       </Flex>

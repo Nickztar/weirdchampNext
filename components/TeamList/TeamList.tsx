@@ -2,11 +2,13 @@ import { Heading, useColorMode, Box } from '@chakra-ui/react';
 import React from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { DiscordChannel } from '../../types/DiscordTypes';
+import TeamPlaceholder from '../TeamPlaceholder';
 import TeamUser from '../TeamUser';
 
 interface ITeamListProps {
   channel: DiscordChannel;
   toggleIgnored: (userId: string) => void;
+  onPlaceholderAdd: (name: string) => void;
   listId: string;
   listType: string;
 }
@@ -14,6 +16,7 @@ interface ITeamListProps {
 export const TeamList: React.FC<ITeamListProps> = ({
   channel,
   toggleIgnored,
+  onPlaceholderAdd,
   listId,
   listType,
 }) => {
@@ -61,27 +64,31 @@ export const TeamList: React.FC<ITeamListProps> = ({
             }}
             ref={dropProvided.innerRef}
           >
-            {channel.currentUsers.map((user, index) => (
-              <Draggable
-                key={user.id}
-                draggableId={user.id}
-                index={index}
-                isDragDisabled={user.isIgnored}
-              >
-                {(dragProvided) => (
-                  <div
-                    {...dragProvided.dragHandleProps}
-                    {...dragProvided.draggableProps}
-                    ref={dragProvided.innerRef}
-                  >
-                    <TeamUser
-                      user={user}
-                      handleClick={() => toggleIgnored(user.id)}
-                    />
-                  </div>
-                )}
-              </Draggable>
-            ))}
+            <>
+              {channel.currentUsers.map((user, index) => (
+                <Draggable
+                  key={user.id}
+                  draggableId={user.id}
+                  index={index}
+                  isDragDisabled={user.isIgnored}
+                >
+                  {(dragProvided) => (
+                    <div
+                      {...dragProvided.dragHandleProps}
+                      {...dragProvided.draggableProps}
+                      ref={dragProvided.innerRef}
+                    >
+                      <TeamUser
+                        user={user}
+                        handleClick={() => toggleIgnored(user.id)}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              <TeamPlaceholder handleAdd={onPlaceholderAdd} />
+            </>
+
             {dropProvided.placeholder}
           </Box>
         )}
