@@ -9,13 +9,9 @@ import { generate } from 'shortid';
 
 interface ITeamSplittingProps {
   data: DiscordGuild[];
-  fetchSuccess: boolean;
 }
 
-export const TeamSplitting: React.FC<ITeamSplittingProps> = ({
-  data,
-  fetchSuccess,
-}) => {
+export const TeamSplitting: React.FC<ITeamSplittingProps> = ({ data }) => {
   const [guild, setGuild] = useState<DiscordGuild>(null);
   const [channels, setSelectedChannels] = useState<
     [DiscordChannel?, DiscordChannel?]
@@ -36,7 +32,7 @@ export const TeamSplitting: React.FC<ITeamSplittingProps> = ({
     setSelectedChannels([placeHolder.channels[0], placeHolder.channels[1]]);
   };
 
-  if (!breakPointValue || (data.length == 0 && fetchSuccess)) {
+  if (!breakPointValue || (data != null && data.length == 0)) {
     return (
       <Flex
         alignItems="center"

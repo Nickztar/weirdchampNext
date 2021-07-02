@@ -16,10 +16,10 @@ interface IGuildSelectionProps {
   onSkip: () => void;
 }
 
-const getColumnValue = (length: number) => {
-  if (length == 0) return 2;
-  if (length > 2) return 3;
-  return length;
+const getColumnValue = (guilds: DiscordGuild[]) => {
+  if (guilds == null) return 2;
+  if (guilds.length > 2) return 3;
+  return guilds.length;
 };
 
 export const GuildSelection: React.FC<IGuildSelectionProps> = ({
@@ -29,7 +29,7 @@ export const GuildSelection: React.FC<IGuildSelectionProps> = ({
 }) => {
   const columns = useBreakpointValue({
     base: 1,
-    md: getColumnValue(guilds.length),
+    md: getColumnValue(guilds),
   });
   return (
     <Flex
@@ -51,7 +51,7 @@ export const GuildSelection: React.FC<IGuildSelectionProps> = ({
       </Flex>
 
       <SimpleGrid columns={columns} h="100%" gap={6}>
-        {guilds.length != 0 ? (
+        {guilds != null ? (
           guilds.map((guild, i) => {
             return (
               <Guild
