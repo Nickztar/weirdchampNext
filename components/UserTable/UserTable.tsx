@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTable } from 'react-table';
+import { useTable, useSortBy } from 'react-table';
 import {
   Table,
   Tbody,
@@ -35,6 +35,8 @@ import {
 import { FaUserPlus, FaUserShield, FaUserSlash } from 'react-icons/fa';
 import { useQueryClient } from 'react-query';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
+import { TriangleDownIcon } from '@chakra-ui/icons';
+import { TriangleUpIcon } from '@chakra-ui/icons';
 
 const Form = ({ firstFieldRef, onCancel, user, isBanned, banReason }) => {
   const queryClient = useQueryClient();
@@ -98,7 +100,7 @@ const Form = ({ firstFieldRef, onCancel, user, isBanned, banReason }) => {
 
   return (
     <Stack spacing={4}>
-      <FormControl id="ban-reason">
+      <FormControl>
         <FormLabel>Ban reason</FormLabel>
         <Input
           type="text"
@@ -312,34 +314,43 @@ export const UserTable = ({ data }) => {
     headerGroups,
     rows,
     prepareRow,
-  } = useTable({ columns, data });
+  } = useTable({ columns, data }, useSortBy);
 
   return (
     <Table {...getTableProps()}>
       <Thead>
-        {headerGroups.map((headerGroup) => (
-          <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroup}>
-            {headerGroup.headers.map((column) => (
+        {headerGroups.map((headerGroup, h) => (
+          <Tr {...headerGroup.getHeaderGroupProps()} key={`${h}-headerGroup`}>
+            {headerGroup.headers.map((column, c) => (
               <Th
-                key={column}
+                key={`${c}-th`}
                 textAlign="center"
-                {...column.getHeaderProps(column)}
+                {...column.getHeaderProps(column.getSortByToggleProps())}
                 isNumeric={column.isNumeric}
               >
                 {column.render(`Header`)}
+                <chakra.span pl="4">
+                  {column.isSorted ? (
+                    column.isSortedDesc ? (
+                      <TriangleDownIcon aria-label="sorted descending" />
+                    ) : (
+                      <TriangleUpIcon aria-label="sorted ascending" />
+                    )
+                  ) : null}
+                </chakra.span>
               </Th>
             ))}
           </Tr>
         ))}
       </Thead>
       <Tbody {...getTableBodyProps()}>
-        {rows.map((row) => {
+        {rows.map((row, i) => {
           prepareRow(row);
           return (
-            <Tr {...row.getRowProps()} key={row}>
-              {row.cells.map((cell) => (
+            <Tr {...row.getRowProps()} key={`${i}-row`}>
+              {row.cells.map((cell, c) => (
                 <Td
-                  key={cell}
+                  key={`${c}-td`}
                   {...cell.getCellProps()}
                   isNumeric={cell.column.isNumeric}
                   textAlign="center"
