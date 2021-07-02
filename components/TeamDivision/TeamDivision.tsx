@@ -195,11 +195,6 @@ export const TeamDivision: React.FC<ITeamDivisionProps> = ({
             toggleIgnored={toggleUser}
             onPlaceholderAdd={(name) => addPlaceholder(name, 0)}
           />
-          {/* <TeamControlls
-            onRandomize={randomizeUsers}
-            onConfirm={handleMove}
-            isLoading={isLoading}
-          /> */}
           <TeamList
             key={columns[1].id}
             listId={columns[1].id}

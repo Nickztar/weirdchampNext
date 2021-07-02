@@ -4,10 +4,13 @@ import { S3File } from '../../types/APITypes';
 
 interface CardProps {
   sound: S3File;
+  isLoading: boolean;
 }
 
-export const Card: React.FC<CardProps> = ({ sound }): React.ReactElement => {
-  // const { image, name, genres, rating, numReviews, tagLine } = sound;
+export const Card: React.FC<CardProps> = ({
+  sound,
+  isLoading,
+}): React.ReactElement => {
   return (
     <chakra.div
       position="relative"
@@ -51,13 +54,19 @@ export const Card: React.FC<CardProps> = ({ sound }): React.ReactElement => {
           fontSize="4xl"
           fontWeight="semibold"
           color={useColorModeValue(`gray.800`, `white`)}
+          _after={
+            isLoading
+              ? {
+                  animation: 'dots 1s steps(5, end) infinite',
+                  content: '"."',
+                }
+              : {}
+          }
         >
-          Play
+          {isLoading ? 'Loading' : 'Play'}
         </Text>
       </Box>
-      <Box mt={-6} mx={-6} mb={6} pos="relative">
-        {/* <Image src={image} layout="responsive" width="16px" height="9px" /> */}
-      </Box>
+      <Box mt={-6} mx={-6} mb={6} pos="relative"></Box>
 
       <Flex isTruncated direction="column" justifyContent="space-between">
         <Flex direction={'column'} isTruncated>
@@ -67,19 +76,19 @@ export const Card: React.FC<CardProps> = ({ sound }): React.ReactElement => {
               color={useColorModeValue(`gray.700`, `white`)}
               fontSize="2xl"
               fontWeight="bold"
-              isTruncated
+              isTruncated={!isLoading}
+              _after={
+                isLoading
+                  ? {
+                      animation: 'dots 1s steps(5, end) infinite',
+                      content: '"."',
+                    }
+                  : {}
+              }
             >
-              {sound.DisplayName}
+              {isLoading ? 'Loading' : sound.DisplayName}
             </Text>
-            {/* <Badge colorScheme="purple">{genres[0]}</Badge> */}
           </Flex>
-          {/* <HStack justifyContent="space-between" alignItems="flex-start" mt={3}>
-            <Text color="gray.500" isTruncated>
-              {tagLine || 'No tag line :(...'}
-            </Text>
-
-            <Rating rating={rating} numReviews={numReviews} />
-          </HStack> */}
         </Flex>
       </Flex>
     </chakra.div>

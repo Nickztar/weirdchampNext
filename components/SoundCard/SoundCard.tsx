@@ -7,17 +7,23 @@ interface ISoundCardProps {
   handleClick: () => void;
   sound: S3File;
   index: number;
+  isLoading: boolean;
 }
 
 export const SoundCard: React.FC<ISoundCardProps> = ({
   handleClick,
   sound,
   index,
+  isLoading,
 }) => {
   return (
     <Flex maxW="100%">
       <Box height="full" width="full" maxW="80%" onClick={handleClick}>
-        <Card sound={sound} key={`${index.toString()}card`} />
+        <Card
+          sound={sound}
+          key={`${index.toString()}card`}
+          isLoading={isLoading}
+        />
       </Box>
       <PreviewButton SongKey={sound.key} hash={sound.NameHash} Index={index} />
     </Flex>

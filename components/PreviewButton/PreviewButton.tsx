@@ -1,9 +1,8 @@
-import { Tooltip, IconButton, toast, useToast } from '@chakra-ui/react';
-import React, { ReactElement } from 'react';
-import { S3File } from '../../types/APITypes';
+import { Tooltip, IconButton, useToast } from '@chakra-ui/react';
+import React from 'react';
+import { useState } from 'react';
 import { IPreviewSound } from '../../types/generalTypes';
 import Hashvatar from '../Hashvatar';
-import { sha256, useHash } from '../Hashvatar/Hashvatar';
 
 interface IPreviewButtonProps {
   SongKey: string;
@@ -17,17 +16,17 @@ export const PreviewButton: React.FC<IPreviewButtonProps> = ({
   hash,
 }) => {
   const toast = useToast();
+  const [isLoading, setIsLoading] = useState(false);
   const handlePreview = async (key: string) => {
     if (!key) {
       return;
     }
-
+    setIsLoading(true);
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URI}/api/preview?key=${key}`
     );
     if (res.status === 200) {
       const json = (await res.json()) as IPreviewSound;
-
       const audio = new Audio(json.url);
       audio.onloadedmetadata = async () => {
         audio.volume = 0.1;
@@ -39,6 +38,7 @@ export const PreviewButton: React.FC<IPreviewButtonProps> = ({
           isClosable: false,
         });
         await audio.play();
+        setIsLoading(false);
       };
     } else {
       toast({
@@ -48,6 +48,7 @@ export const PreviewButton: React.FC<IPreviewButtonProps> = ({
         duration: 5000,
         isClosable: true,
       });
+      setIsLoading(false);
     }
   };
   return (
@@ -59,6 +60,7 @@ export const PreviewButton: React.FC<IPreviewButtonProps> = ({
     >
       <IconButton
         key={`${Index}icon`}
+        isLoading={isLoading}
         variant="ghost"
         h="84px"
         w="20%"

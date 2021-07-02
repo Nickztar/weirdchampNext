@@ -34,14 +34,14 @@ export default function TeamSplittingPage({
     return <BannedPage user={user} />;
   }
   //idk typescript well enough to know whats goin wrong here but | any ignores it :/
-  const data = useQuery(`guilds`, getGuilds, {
+  const { data, isSuccess } = useQuery(`guilds`, getGuilds, {
     initialData: [],
   });
   return (
     <>
       <NextSeo title="Team splitting" />
       <AppLayout user={user}>
-        <TeamSplitting data={data.data} />
+        <TeamSplitting data={data} fetchSuccess={isSuccess} />
       </AppLayout>
     </>
   );

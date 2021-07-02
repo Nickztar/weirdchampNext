@@ -9,9 +9,13 @@ import { generate } from 'shortid';
 
 interface ITeamSplittingProps {
   data: DiscordGuild[];
+  fetchSuccess: boolean;
 }
 
-export const TeamSplitting: React.FC<ITeamSplittingProps> = ({ data }) => {
+export const TeamSplitting: React.FC<ITeamSplittingProps> = ({
+  data,
+  fetchSuccess,
+}) => {
   const [guild, setGuild] = useState<DiscordGuild>(null);
   const [channels, setSelectedChannels] = useState<
     [DiscordChannel?, DiscordChannel?]
@@ -32,7 +36,7 @@ export const TeamSplitting: React.FC<ITeamSplittingProps> = ({ data }) => {
     setSelectedChannels([placeHolder.channels[0], placeHolder.channels[1]]);
   };
 
-  if (!breakPointValue) {
+  if (!breakPointValue || (data.length == 0 && fetchSuccess)) {
     return (
       <Flex
         alignItems="center"
@@ -41,7 +45,9 @@ export const TeamSplitting: React.FC<ITeamSplittingProps> = ({ data }) => {
         h="50%"
       >
         <Heading as="h2" size="md">
-          Not available on mobile yet...
+          {!breakPointValue
+            ? 'Not available on mobile yet...'
+            : 'No guild available :('}
         </Heading>
         <Link href="/">
           <Button my={4} colorScheme="purple">

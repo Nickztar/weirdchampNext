@@ -2,7 +2,6 @@ import {
   Container,
   SimpleGrid,
   useDisclosure,
-  Box,
   Flex,
   InputGroup,
   InputLeftElement,
@@ -44,9 +43,10 @@ export const CardGrid: React.FC<CardGridProps> = ({
     initialData: [],
     refetchInterval: 20 * 1000, //Fetch new data every 20 seconds :D
   });
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen } = useDisclosure();
   const [filter, setFilter] = useState('');
   const [sort, setSort] = useState('recent');
+  const [currentLoading, setCurrentLoading] = useState<string>('');
   const gridRef = useRef(null);
   const toast = useToast();
   const { colorMode } = useColorMode();
@@ -83,11 +83,11 @@ export const CardGrid: React.FC<CardGridProps> = ({
   }, []);
 
   const handlePlay = async (sound: S3File) => {
-    if (!sound) {
+    if (!sound || currentLoading == sound.key) {
       return;
       // return setMovieError(`Please select a valid movie.`);
     }
-
+    setCurrentLoading(sound.key);
     const data: PlayEndpointBodyType = {
       // eslint-disable-next-line no-underscore-dangle
       soundID: sound.key,
@@ -100,6 +100,7 @@ export const CardGrid: React.FC<CardGridProps> = ({
     });
 
     if (res.status === 200) {
+      setCurrentLoading('');
       toast({
         title: 'Sound playing!',
         status: 'success',
@@ -107,6 +108,8 @@ export const CardGrid: React.FC<CardGridProps> = ({
         duration: 5000,
         isClosable: true,
       });
+    } else {
+      setCurrentLoading('');
     }
   };
 
@@ -267,6 +270,7 @@ export const CardGrid: React.FC<CardGridProps> = ({
                     handlePlay(sound);
                     return onOpen();
                   }}
+                  isLoading={sound.key == currentLoading}
                   index={i}
                   sound={sound}
                 />
