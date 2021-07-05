@@ -83,7 +83,7 @@ export const CardGrid: React.FC<CardGridProps> = ({
   }, []);
 
   const handlePlay = async (sound: S3File) => {
-    if (!sound || currentLoading == sound.key) {
+    if (!sound || currentLoading != '') {
       return;
       // return setMovieError(`Please select a valid movie.`);
     }
