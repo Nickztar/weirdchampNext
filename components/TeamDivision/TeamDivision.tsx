@@ -8,12 +8,21 @@ import {
 import { DragDropContext } from 'react-beautiful-dnd';
 import { reorderColumns } from '../../utils/reorder';
 import TeamList from '../TeamList';
-import { Box, Button, Flex, Icon, useToast } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Icon,
+  IconButton,
+  useToast,
+} from '@chakra-ui/react';
 import TeamControlls from '../TeamControlls';
 import { ShuffleArray } from '../../utils/shuffle';
 import { generate } from 'shortid';
 import { FiMove } from 'react-icons/fi';
 import { FaRandom } from 'react-icons/fa';
+import { useQuery } from 'react-query';
+import { IoMdRefresh } from 'react-icons/io';
 
 interface ITeamDivisionProps {
   guild: DiscordGuild;
@@ -32,6 +41,7 @@ export const TeamDivision: React.FC<ITeamDivisionProps> = ({
     firstChannel,
     secondChannel,
   ]);
+  const { refetch } = useQuery<DiscordGuild[]>('guilds');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const toast = useToast();
   const toggleUser = (userId: string) => {
@@ -106,6 +116,24 @@ export const TeamDivision: React.FC<ITeamDivisionProps> = ({
     );
   };
 
+  const onRefresh = async () => {
+    const { data } = await refetch();
+    const currentGuild = data.find((x) => x.id == guild.id);
+    const firstChannel = currentGuild.channels.find(
+      (x) => x.id == columns[0].id
+    );
+    const secondChannel = currentGuild.channels.find(
+      (x) => x.id == columns[1].id
+    );
+    const channels = [firstChannel, secondChannel];
+    setColumns(
+      columns.map((c, i) => {
+        c.currentUsers = channels[i].currentUsers;
+        return c;
+      })
+    );
+  };
+
   const handleMove = async () => {
     setIsLoading(true);
     const moveChannel = columns.map((column) => {
@@ -175,6 +203,13 @@ export const TeamDivision: React.FC<ITeamDivisionProps> = ({
         >
           Confirm <Icon as={FiMove} ml={2} />
         </Button>
+        <IconButton
+          ml={2}
+          aria-label="refresh"
+          icon={<IoMdRefresh />}
+          onClick={onRefresh}
+          colorScheme="purple"
+        />
       </Flex>
 
       <Flex justifyContent="space-evenly" h="100%">

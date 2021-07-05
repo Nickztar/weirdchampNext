@@ -33,9 +33,9 @@ export default function TeamSplittingPage({
   if (user.isBanned) {
     return <BannedPage user={user} />;
   }
-  //idk typescript well enough to know whats goin wrong here but | any ignores it :/
   const { data } = useQuery(`guilds`, getGuilds, {
     initialData: null,
+    staleTime: 60 * 60,
   });
   return (
     <>
