@@ -166,8 +166,17 @@ export const CardGrid: React.FC<CardGridProps> = ({
             {
               <chakra.span
                 color={useColorModeValue('purple.500', 'purple.300')}
+                mr={data == null ? 5 : 0}
+                _after={
+                  data == null
+                    ? {
+                        animation: 'dots 1s steps(5, end) infinite',
+                        content: '"."',
+                      }
+                    : {}
+                }
               >
-                {data?.length}
+                {data?.length ?? '0'}
               </chakra.span>
             }{' '}
             sounds

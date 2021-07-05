@@ -141,6 +141,7 @@ export const SoundModal = ({ isAdmin }) => {
         variant="solid"
         colorScheme="purple"
         mr={isAdmin ? 0 : 3}
+        display={{ base: 'none', md: 'block' }}
         leftIcon={<AddIcon />}
         onClick={() => onOpen()}
       >
